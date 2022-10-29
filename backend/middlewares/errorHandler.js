@@ -1,9 +1,11 @@
-const { CustomApiError, createCustomError } = require("../errors/customError");
-const errorHandleMiddleware = (req, res, err, next) => {
-  if (err instanceof CustomApiError) {
-    res.status(err.statusCode).json({ msg: err.message });
+const { CustomAPIError } = require("../errors/customError");
+const errorHandlerMiddleware = async (err, req, res, next) => {
+  if (err instanceof CustomAPIError) {
+    return res.status(err.statusCode).json({ msg: err.message });
   }
-  return res.status(500).json({ msg: "Something went wrong!" });
+  return res
+    .status(500)
+    .json({ msg: "Something went wrong, please try again" });
 };
 
-module.exports = errorHandleMiddleware;
+module.exports = errorHandlerMiddleware;
