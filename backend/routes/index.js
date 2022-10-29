@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const cors = require("cors");
+const corsOptions = require("../middlewares/corsMiddleware");
 
 const {
   getMovies,
@@ -9,7 +11,7 @@ const {
   deleteMovie,
 } = require("../controllers/movies.js");
 
-router.route("/").get(getMovies).post(createMovie);
+router.route("/").get(cors(corsOptions), getMovies).post(createMovie);
 router.route("/:id").get(getMovie).patch(updateMovie).delete(deleteMovie);
 
 module.exports = router;

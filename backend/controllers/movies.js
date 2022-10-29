@@ -10,13 +10,13 @@ const getMovie = asyncWrapper(async (req, res) => {
   res.send("getMovie controller");
 });
 
-const createMovie = asyncWrapper((req, res) => {
+const createMovie = asyncWrapper(async (req, res) => {
   res.send("createMovie controller");
 });
 
-const updateMovie = (req, res) => {
+const updateMovie = asyncWrapper(async (req, res) => {
   res.send("updateMovie controller");
-};
+});
 
 const deleteMovie = asyncWrapper(async (req, res) => {
   res.send("deleteMovie controller");

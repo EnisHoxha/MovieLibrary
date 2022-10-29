@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+const helmet = require("helmet");
+const cors = require("cors");
 const movies_routes = require("./routes/index");
 const connectDB = require("./db/database");
 const notFound = require("./middlewares/notFound");
@@ -8,6 +10,8 @@ const errorHandlerMiddleware = require("./middlewares/errorHandler");
 
 app.use(express.json());
 app.use(express.static("./public/images/"));
+app.use(helmet());
+app.use(cors());
 app.use("/api/movies", movies_routes);
 app.use(notFound);
 app.use(errorHandlerMiddleware);
