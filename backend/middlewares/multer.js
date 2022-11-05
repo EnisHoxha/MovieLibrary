@@ -20,10 +20,18 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage: storage,
   fileFilter: function (req, file, callback) {
-    if (!file.originalname.match(/\.(webp|jpg|jpeg|png|svg)$/)) {
-      const err = createCustomError("File must be webp|jpg|jpeg|png|svg ", 400);
+    const extension = path.extname(file.originalname);
+    const ext = extension.toLowerCase();
+    if (
+      ext !== ".png" &&
+      ext !== ".jpg" &&
+      ext !== ".webp" &&
+      ext !== ".jpeg"
+    ) {
+      const err = createCustomError("Only image Formats are allowed...", 400);
       return callback(err);
     }
+    callback(null, true);
   },
 });
 

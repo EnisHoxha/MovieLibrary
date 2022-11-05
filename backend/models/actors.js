@@ -4,10 +4,9 @@ const mongoose = require("mongoose");
 const ActorsSchema = new mongoose.Schema({
   name: { type: String, required: true },
   image: {
-    data: Buffer,
-    contentType: String,
+    type: String,
     default: actor_img,
   },
 });
 
-module.exports = new mongoose.model("Actors", ActorsSchema);
+module.exports = mongoose.model("Actors", ActorsSchema);

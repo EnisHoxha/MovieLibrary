@@ -10,7 +10,7 @@ const MovieSchema = new mongoose.Schema({
   },
   actors: { type: [], required: true },
   genres: { type: [], required: true },
-  poster_img: { data: Buffer, contentType: String },
+  poster_img: { type: String, required: true },
   description: { type: String, default: "No Description yet!" },
   original_language: { type: String, required: true },
   imdb_rating: {
@@ -35,4 +35,4 @@ const MovieSchema = new mongoose.Schema({
   dislike: Number,
 });
 
-module.exports = new mongoose.model("Movies", MovieSchema);
+module.exports = mongoose.model("Movies", MovieSchema);

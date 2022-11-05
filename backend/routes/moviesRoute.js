@@ -3,6 +3,7 @@ const router = express.Router();
 const cors = require("cors");
 const corsOptions = require("../middlewares/corsMiddleware");
 const upload = require("../middlewares/multer");
+const auth = require("../middlewares/auth");
 
 const {
   getMovies,
@@ -14,7 +15,7 @@ const {
 
 router
   .route("/")
-  .get(cors(corsOptions), getMovies)
+  .get(cors(corsOptions), auth, getMovies)
   .post(upload.single("image"), createMovie);
 router
   .route("/:id")

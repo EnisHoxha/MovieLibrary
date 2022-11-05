@@ -5,4 +5,4 @@ const LanguagesSchema = new mongoose.Schema({
   iso_code: { type: String, required: true },
 });
 
-module.exports = new mongoose.model("Languages", LanguagesSchema);
+module.exports = mongoose.model("Languages", LanguagesSchema);
