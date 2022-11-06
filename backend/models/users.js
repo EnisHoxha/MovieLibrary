@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const timeNow = require("../moment");
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -26,6 +27,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "user",
   },
+  createdAt: { type: String, default: timeNow },
 });
 
 UserSchema.pre("save", async function () {

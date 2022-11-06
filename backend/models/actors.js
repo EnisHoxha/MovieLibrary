@@ -1,5 +1,6 @@
 const { actor_img } = require("../config.env");
 const mongoose = require("mongoose");
+const timeNow = require("../moment");
 
 const ActorsSchema = new mongoose.Schema({
   name: { type: String, required: true },
@@ -7,6 +8,7 @@ const ActorsSchema = new mongoose.Schema({
     type: String,
     default: actor_img,
   },
+  createdAt: { type: String, default: timeNow },
 });
 
 module.exports = mongoose.model("Actors", ActorsSchema);

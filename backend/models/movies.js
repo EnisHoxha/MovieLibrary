@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const timeNow = require("../moment");
 
 const MovieSchema = new mongoose.Schema({
   movie_title: { type: String, required: true },
@@ -33,6 +34,7 @@ const MovieSchema = new mongoose.Schema({
   film_studio: { type: String, required: true },
   like: Number,
   dislike: Number,
+  createdAt: { type: String, default: timeNow },
 });
 
 module.exports = mongoose.model("Movies", MovieSchema);

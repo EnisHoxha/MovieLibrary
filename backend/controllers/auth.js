@@ -5,6 +5,7 @@ const { UnauthenticatedError, BadRequestError } = require("../errors");
 const register = async (req, res) => {
   const user = await User.create({ ...req.body });
   const token = user.createJWT();
+  // res.cookie("token", token, { httpOnly: true, maxAge: 100000 });
   res
     .status(StatusCodes.CREATED)
     .json({ user: { name: user.name, role: user.role }, token });
@@ -27,7 +28,7 @@ const login = async (req, res) => {
   }
 
   const token = user.createJWT();
-  res.cookie("token", token, { httpOnly: true, maxAge: 100000 });
+  // res.cookie("token", token, { httpOnly: true, maxAge: 100000 });
   res
     .status(StatusCodes.OK)
     .json({ user: { name: user.name, role: user.role }, token });

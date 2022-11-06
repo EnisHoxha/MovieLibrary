@@ -1,3 +1,4 @@
+//imports
 const express = require("express");
 const app = express();
 require("dotenv").config();
@@ -13,6 +14,7 @@ const connectDB = require("./db/database");
 const notFound = require("./middlewares/notFound");
 const errorHandlerMiddleware = require("./middlewares/errorHandler");
 
+//routes
 app.use(express.json());
 app.use("/static", express.static(path.join(__dirname, "public/images")));
 app.use(helmet());
@@ -24,6 +26,7 @@ app.use("/api/auth", auth_routes);
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 
+//server config
 const port = process.env.PORT || 3000;
 const start = async () => {
   try {
@@ -32,7 +35,7 @@ const start = async () => {
       console.log("Database Connected Successfully!")
     );
     app.listen(port, () => {
-      console.log(`Server is listening in Port ${port}`);
+      console.log(`Server is listening in Port ${port} `);
     });
   } catch (error) {
     console.log(error);
