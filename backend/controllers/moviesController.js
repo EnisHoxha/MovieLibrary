@@ -12,7 +12,7 @@ const getMovie = asyncWrapper(async (req, res) => {
   const { id: movieId } = req.params;
   const movie = await Movies.findOne({ _id: movieId });
   if (!movie) {
-    throw new NotFoundError(`Movie with id: ${taskId} doesn't exist`);
+    throw new NotFoundError(`Movie with id: ${movieId} doesn't exist`);
   }
   res.status(StatusCodes.OK).json({ movie });
 });
@@ -34,7 +34,8 @@ const updateMovie = asyncWrapper(async (req, res) => {
   if (req.file) {
     const movie = await Movies.findOneAndUpdate(
       { _id: movieId },
-      { ...req.body, poster_img: req.file.path }
+      { ...req.body, poster_img: req.file.path },
+      { new: true, runValidators: true }
     );
     if (!movie) {
       throw new NotFoundError(`Movie with id:${movieId} doesn't exist`);
@@ -43,7 +44,8 @@ const updateMovie = asyncWrapper(async (req, res) => {
   } else {
     const movie = await Movies.findOneAndUpdate(
       { _id: movieId },
-      { ...req.body }
+      { ...req.body },
+      { new: true, runValidators: true }
     );
     if (!movie) {
       throw new NotFoundError(`Movie with id:${movieId} doesn't exist`);
@@ -56,7 +58,7 @@ const deleteMovie = asyncWrapper(async (req, res) => {
   const { id: movieId } = req.params;
   const movie = await Movies.findOneAndDelete({ _id: movieId });
   if (!movie) {
-    throw new NotFoundError(`No task with id:${taskId}`);
+    throw new NotFoundError(`No movie with id:${movieId}`);
   }
   res.status(StatusCodes.OK).json({ movie });
 });

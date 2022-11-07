@@ -35,9 +35,14 @@ const MovieSchema = new mongoose.Schema({
   },
   directors: { type: [], required: true },
   film_studio: { type: String, required: true },
-  like: Number,
-  dislike: Number,
-  createdAt: { type: String, default: timeNow },
+  like: { type: Number, default: 0 },
+  dislike: { type: Number, default: 0 },
+  createdAt: { type: String, default: timeNow() },
+  updatedAt: { type: String, default: timeNow() },
+});
+
+MovieSchema.pre("findOneAndUpdate", function () {
+  this.set({ updatedAt: timeNow() });
 });
 
 module.exports = mongoose.model("Movies", MovieSchema);

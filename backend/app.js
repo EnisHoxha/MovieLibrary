@@ -10,19 +10,29 @@ const path = require("path");
 const cookieParser = require("cookie-parser");
 const movies_routes = require("./routes/moviesRoute");
 const auth_routes = require("./routes/authRoute");
+const type_routes = require("./routes/typeRoute");
+const language_route = require("./routes/languageRoute");
+const genre_route = require("./routes/genreRoute");
+const actors_route = require("./routes/actorsRoute");
 const connectDB = require("./db/database");
 const notFound = require("./middlewares/notFound");
 const errorHandlerMiddleware = require("./middlewares/errorHandler");
 
-//routes
+//depedencies
 app.use(express.json());
 app.use("/static", express.static(path.join(__dirname, "public/images")));
 app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use("/api/movies", movies_routes);
+
+//routes
 app.use("/api/auth", auth_routes);
+app.use("/api/movies", movies_routes);
+app.use("/api/types", type_routes);
+app.use("/api/languages", language_route);
+app.use("/api/genres", genre_route);
+app.use("/api/actors", actors_route);
 app.use(notFound);
 app.use(errorHandlerMiddleware);
 
