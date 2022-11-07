@@ -1,6 +1,6 @@
 const { actor_img } = require("../config.env");
 const mongoose = require("mongoose");
-const timeNow = require("../moment");
+const timeNow = require("../day");
 
 const ActorsSchema = new mongoose.Schema({
   name: { type: String, required: true },

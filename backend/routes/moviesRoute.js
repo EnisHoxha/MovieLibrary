@@ -15,7 +15,7 @@ const {
 
 router
   .route("/")
-  .get(cors(corsOptions), auth, getMovies)
+  .get(cors(corsOptions), getMovies)
   .post(upload.single("image"), createMovie);
 router
   .route("/:id")

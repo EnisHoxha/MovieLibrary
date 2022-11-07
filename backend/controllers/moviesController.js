@@ -1,31 +1,64 @@
-const movies = require("../models/movies");
+const Movies = require("../models/movies");
 const asyncWrapper = require("../middlewares/asyncWrapper");
+const { StatusCodes } = require("http-status-codes");
+const { NotFoundError } = require("../errors");
 
-const getMovies = asyncWrapper(async (req, res, next) => {
-  let nr = 1;
-  if ((nr = 1)) {
-    res.send("Hello from getMovies controller");
-  }
+const getMovies = asyncWrapper(async (req, res) => {
+  const movies = await Movies.find({});
+  res.status(StatusCodes.OK).json({ movies });
 });
 
 const getMovie = asyncWrapper(async (req, res) => {
-  res.send("getMovie controller");
+  const { id: movieId } = req.params;
+  const movie = await Movies.findOne({ _id: movieId });
+  if (!movie) {
+    throw new NotFoundError(`Movie with id: ${taskId} doesn't exist`);
+  }
+  res.status(StatusCodes.OK).json({ movie });
 });
 
-const createMovie = asyncWrapper(async (req, res, next) => {
-  res.send("createMovie controller");
-  console.log(req.body);
-  console.log(req.file);
-  // const err = createCustomError("This is an custom error message...", 400);
-  // next(err);
+const createMovie = asyncWrapper(async (req, res) => {
+  try {
+    const movie = await Movies.create({
+      ...req.body,
+      poster_img: req.file.path,
+    });
+    res.status(StatusCodes.OK).json({ movie });
+  } catch (error) {
+    res.json({ msg: error.message });
+  }
 });
 
 const updateMovie = asyncWrapper(async (req, res) => {
-  res.send("updateMovie controller");
+  const { id: movieId } = req.params;
+  if (req.file) {
+    const movie = await Movies.findOneAndUpdate(
+      { _id: movieId },
+      { ...req.body, poster_img: req.file.path }
+    );
+    if (!movie) {
+      throw new NotFoundError(`Movie with id:${movieId} doesn't exist`);
+    }
+    res.status(StatusCodes.OK).json({ movie });
+  } else {
+    const movie = await Movies.findOneAndUpdate(
+      { _id: movieId },
+      { ...req.body }
+    );
+    if (!movie) {
+      throw new NotFoundError(`Movie with id:${movieId} doesn't exist`);
+    }
+    res.status(StatusCodes.OK).json({ movie });
+  }
 });
 
 const deleteMovie = asyncWrapper(async (req, res) => {
-  res.send("deleteMovie controller");
+  const { id: movieId } = req.params;
+  const movie = await Movies.findOneAndDelete({ _id: movieId });
+  if (!movie) {
+    throw new NotFoundError(`No task with id:${taskId}`);
+  }
+  res.status(StatusCodes.OK).json({ movie });
 });
 
 module.exports = { getMovies, getMovie, createMovie, updateMovie, deleteMovie };

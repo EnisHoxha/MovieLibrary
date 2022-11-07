@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const timeNow = require("../moment");
+const timeNow = require("../day");
 
 const LanguagesSchema = new mongoose.Schema({
   language: { type: String, required: true },
