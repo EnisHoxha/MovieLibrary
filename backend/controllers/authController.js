@@ -1,6 +1,7 @@
 const User = require("../models/users");
 const { StatusCodes } = require("http-status-codes");
 const { UnauthenticatedError, BadRequestError } = require("../errors");
+require("dotenv").config();
 
 const register = async (req, res) => {
   const user = await User.create({ ...req.body });
@@ -28,7 +29,14 @@ const login = async (req, res) => {
   }
 
   const token = user.createJWT();
-  // res.cookie("token", token, { httpOnly: true, maxAge: 100000 });
+  res.cookie("token", token, {
+    httpOnly: true,
+    maxAge: process.env.COOKIE_MAX_AGE,
+  });
+
+  res.cookie("user_auth", user.role, {
+    maxAge: process.env.COOKIE_MAX_AGE,
+  });
   res
     .status(StatusCodes.OK)
     .json({ user: { name: user.name, role: user.role }, token });

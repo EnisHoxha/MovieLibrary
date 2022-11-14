@@ -21,7 +21,7 @@ const createActor = asyncWrapper(async (req, res) => {
   try {
     const actor = await Actors.create({
       ...req.body,
-      actor_img: req.file.path,
+      actor_img: req.file.filename,
     });
     res.status(StatusCodes.OK).json({ actor });
   } catch (error) {
@@ -34,7 +34,7 @@ const updateActor = asyncWrapper(async (req, res) => {
   if (req.file) {
     const actor = await Actors.findOneAndUpdate(
       { _id: actorId },
-      { ...req.body, actor_img: req.file.path },
+      { ...req.body, actor_img: req.file.filename },
       { new: true, runValidators: true }
     );
     if (!actor) {

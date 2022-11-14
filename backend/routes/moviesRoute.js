@@ -3,7 +3,7 @@ const router = express.Router();
 const cors = require("cors");
 const corsOptions = require("../middlewares/corsMiddleware");
 const upload = require("../middlewares/multer");
-const auth = require("../middlewares/auth");
+// const auth = require("../middlewares/auth");
 
 const {
   getMovies,

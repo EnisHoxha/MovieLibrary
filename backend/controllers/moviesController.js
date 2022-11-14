@@ -21,7 +21,7 @@ const createMovie = asyncWrapper(async (req, res) => {
   try {
     const movie = await Movies.create({
       ...req.body,
-      poster_img: req.file.path,
+      poster_img: req.file.filename,
     });
     res.status(StatusCodes.OK).json({ movie });
   } catch (error) {
@@ -34,7 +34,7 @@ const updateMovie = asyncWrapper(async (req, res) => {
   if (req.file) {
     const movie = await Movies.findOneAndUpdate(
       { _id: movieId },
-      { ...req.body, poster_img: req.file.path },
+      { ...req.body, poster_img: req.file.filename },
       { new: true, runValidators: true }
     );
     if (!movie) {

@@ -5,6 +5,7 @@ require("dotenv").config();
 require("express-async-errors");
 const helmet = require("helmet");
 const cors = require("cors");
+const corsOptions = require("./corsOptions");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cookieParser = require("cookie-parser");
@@ -22,10 +23,24 @@ const errorHandlerMiddleware = require("./middlewares/errorHandler");
 app.use(express.json());
 app.use("/static", express.static(path.join(__dirname, "public/images")));
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
+//manual method to allow vue to set backend cookies intead of using cors package
+// app.use(function (req, res, next) {
+//   res.header("Access-Control-Allow-Credentials", true);
+//   res.header("Access-Control-Allow-Origin", req.headers.origin);
+//   res.header(
+//     "Access-Control-Allow-Methods",
+//     "GET,PUT,POST,DELETE,UPDATE,OPTIONS"
+//   );
+//   res.header(
+//     "Access-Control-Allow-Headers",
+//     "X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept"
+//   );
+//   next();
+// });
 //routes
 app.use("/api/auth", auth_routes);
 app.use("/api/movies", movies_routes);
