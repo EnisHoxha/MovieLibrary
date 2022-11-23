@@ -11,12 +11,18 @@ const {
   createMovie,
   updateMovie,
   deleteMovie,
+  searchMovie,
+  typeMovie,
 } = require("../controllers/moviesController");
 
 router
   .route("/")
   .get(cors(corsOptions), getMovies)
   .post(upload.single("image"), createMovie);
+
+router.route("/typeMovie").get(typeMovie);
+router.route("/search").get(searchMovie);
+
 router
   .route("/:id")
   .get(getMovie)

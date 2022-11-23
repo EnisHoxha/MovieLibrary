@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
     type: String,
     default: "user",
   },
-  createdAt: { type: String, default: timeNow },
+  createdAt: { type: String, default: timeNow() },
   updatedAt: { type: String, default: timeNow() },
 });
 

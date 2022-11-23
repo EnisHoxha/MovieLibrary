@@ -1,27 +1,42 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { RouterLink, RouterView } from "vue-router";
+import axios from "axios";
+import { useAuthStore } from "./store/auth";
+import { storeToRefs } from "pinia";
+import { onMounted, ref, inject } from "vue";
+
+const $cookies = inject("$cookies");
+const products = ref([]);
+const auth_store = useAuthStore();
+var isDark = ref();
+
+const setUserRole = () => {
+  const user_cookie = $cookies.get("user_auth");
+  const key = import.meta.env.VITE_CRYPTOJS_KEY;
+  auth_store.changeAuth(user_cookie, key);
+};
+
+const darkMode = () => {
+  if (localStorage.theme === "dark" || localStorage.getItem("theme") === null) {
+    document.documentElement.classList.add("dark");
+    localStorage.theme = "dark";
+    isDark.value = true;
+  }
+};
+
+onMounted(() => {
+  setUserRole();
+  darkMode();
+});
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
-    </div>
-  </header>
 
   <RouterView />
 </template>
 
 <style scoped>
-header {
+/* header {
   line-height: 1.5;
   max-height: 100vh;
 }
@@ -61,9 +76,9 @@ nav a:first-of-type {
     display: flex;
     place-items: center;
     padding-right: calc(var(--section-gap) / 2);
-  }
+  } */
 
-  .logo {
+/* .logo {
     margin: 0 2rem 0 0;
   }
 
@@ -81,5 +96,5 @@ nav a:first-of-type {
     padding: 1rem 0;
     margin-top: 1rem;
   }
-}
+} */
 </style>

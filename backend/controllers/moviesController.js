@@ -63,4 +63,32 @@ const deleteMovie = asyncWrapper(async (req, res) => {
   res.status(StatusCodes.OK).json({ movie });
 });
 
-module.exports = { getMovies, getMovie, createMovie, updateMovie, deleteMovie };
+const searchMovie = asyncWrapper(async (req, res) => {
+  const search = req.query.name;
+  const movie = await Movies.find({
+    movie_title: { $regex: search, $options: "i" },
+  });
+  if (!movie) {
+    throw new NotFoundError(`No movie with name: ${search}`);
+  }
+  res.status(StatusCodes.OK).json({ movie });
+});
+
+const typeMovie = asyncWrapper(async (req, res) => {
+  const types = "Movie";
+  const movie = await Movies.find({ type: types });
+  if (!movie) {
+    throw new NotFoundError(`No movies were found`);
+  }
+  res.status(StatusCodes.OK).json({ movie });
+});
+
+module.exports = {
+  getMovies,
+  getMovie,
+  createMovie,
+  updateMovie,
+  deleteMovie,
+  searchMovie,
+  typeMovie,
+};
