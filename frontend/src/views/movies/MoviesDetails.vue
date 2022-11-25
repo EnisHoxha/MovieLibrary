@@ -32,7 +32,7 @@ onMounted(() => {
 
     <div>
       <div class=" container gap-4 mx-auto flex flex-col sm:flex-row mt-6 md:mt-20 border-b p-8   border-gray-600  md:mb-2  ">
-        <img :src="'http://localhost:5002/static/'+movie.poster_img" alt="" class="h-full w-80 rounded-md  object-fill" />
+        <img :src="'http://localhost:5002/static/'+movie.poster_img" alt="" class="h-full w-80 rounded-md  object-fill dark:opacity-80" />
         <div class="lg:ml-24 sm:ml-2">
           <h1 class="md:text-4xl text-xl dark:text-zinc-50 font-semibold">{{ movie.movie_title }}</h1>
           <span class="text-gray-500 text-sm flex">

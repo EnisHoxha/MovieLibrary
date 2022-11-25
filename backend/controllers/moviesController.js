@@ -4,7 +4,8 @@ const { StatusCodes } = require("http-status-codes");
 const { NotFoundError } = require("../errors");
 
 const getMovies = asyncWrapper(async (req, res) => {
-  const movies = await Movies.find({});
+  const page_limit = req.query.limit;
+  const movies = await Movies.find({}).limit(page_limit);
   res.status(StatusCodes.OK).json({ movies });
 });
 
@@ -18,10 +19,13 @@ const getMovie = asyncWrapper(async (req, res) => {
 });
 
 const createMovie = asyncWrapper(async (req, res) => {
+  // console.log(req.files.featured_image[0].filename);
+  // console.log(req.files.image[0].filename);
   try {
     const movie = await Movies.create({
       ...req.body,
-      poster_img: req.file.filename,
+      poster_img: req.files.image[0].filename,
+      featured_img: req.files.featured_image[0].filename,
     });
     res.status(StatusCodes.OK).json({ movie });
   } catch (error) {
@@ -30,11 +34,42 @@ const createMovie = asyncWrapper(async (req, res) => {
 });
 
 const updateMovie = asyncWrapper(async (req, res) => {
+  console.log(req.files.image);
   const { id: movieId } = req.params;
-  if (req.file) {
+  if (req.files.image && req.files.featured_image) {
     const movie = await Movies.findOneAndUpdate(
       { _id: movieId },
-      { ...req.body, poster_img: req.file.filename },
+      {
+        ...req.body,
+        poster_img: req.files.image[0].filename,
+        featured_img: req.files.featured_image[0].filename,
+      },
+      { new: true, runValidators: true }
+    );
+    if (!movie) {
+      throw new NotFoundError(`Movie with id:${movieId} doesn't exist`);
+    }
+    res.status(StatusCodes.OK).json({ movie });
+  } else if (req.files.featured_image) {
+    const movie = await Movies.findOneAndUpdate(
+      { _id: movieId },
+      {
+        ...req.body,
+        featured_img: req.files.featured_image[0].filename,
+      },
+      { new: true, runValidators: true }
+    );
+    if (!movie) {
+      throw new NotFoundError(`Movie with id:${movieId} doesn't exist`);
+    }
+    res.status(StatusCodes.OK).json({ movie });
+  } else if (req.files.image) {
+    const movie = await Movies.findOneAndUpdate(
+      { _id: movieId },
+      {
+        ...req.body,
+        poster_img: req.files.image[0].filename,
+      },
       { new: true, runValidators: true }
     );
     if (!movie) {
@@ -83,6 +118,15 @@ const typeMovie = asyncWrapper(async (req, res) => {
   res.status(StatusCodes.OK).json({ movie });
 });
 
+const typeFeatured = asyncWrapper(async (req, res) => {
+  const featured = true;
+  const movie = await Movies.find({ featured: featured });
+  if (!movie) {
+    throw new NotFoundError(`No movies were found`);
+  }
+  res.status(StatusCodes.OK).json({ movie });
+});
+
 module.exports = {
   getMovies,
   getMovie,
@@ -91,4 +135,5 @@ module.exports = {
   deleteMovie,
   searchMovie,
   typeMovie,
+  typeFeatured,
 };

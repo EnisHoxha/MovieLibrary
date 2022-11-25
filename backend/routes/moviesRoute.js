@@ -13,20 +13,28 @@ const {
   deleteMovie,
   searchMovie,
   typeMovie,
+  typeFeatured,
 } = require("../controllers/moviesController");
 
 router
   .route("/")
   .get(cors(corsOptions), getMovies)
-  .post(upload.single("image"), createMovie);
+  .post(
+    upload.fields([{ name: "image" }, { name: "featured_image" }]),
+    createMovie
+  );
 
-router.route("/typeMovie").get(typeMovie);
 router.route("/search").get(searchMovie);
+router.route("/typeMovie").get(typeMovie);
+router.route("/typeFeatured").get(typeFeatured);
 
 router
   .route("/:id")
   .get(getMovie)
-  .patch(upload.single("image"), updateMovie)
+  .patch(
+    upload.fields([{ name: "image" }, { name: "featured_image" }]),
+    updateMovie
+  )
   .delete(deleteMovie);
 
 module.exports = router;

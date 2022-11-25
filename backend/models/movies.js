@@ -12,6 +12,8 @@ const MovieSchema = new mongoose.Schema({
   actors: { type: [], required: true },
   genres: { type: [], required: true },
   poster_img: { type: String },
+  featured_img: { type: String },
+  featured: { type: Boolean, default: false },
   description: { type: String, default: "No Description yet!" },
   original_language: { type: String, required: true },
   imdb_rating: {
@@ -26,7 +28,7 @@ const MovieSchema = new mongoose.Schema({
   runtime: {
     type: Number,
     min: [75, "Movie Runtime cant be less than 75 Minutes"],
-    max: [120, "Movie Runtime cant be more than 2 Hours"],
+    max: [180, "Movie Runtime cant be more than 2 Hours"],
   },
   adult: { type: Boolean, default: false },
   type: {

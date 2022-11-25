@@ -17,6 +17,14 @@ const router = createRouter({
       component: () => import("../components/sliders/MoviesSlider.vue"),
     },
     {
+      path: "/homeslider",
+      component: () => import("../components/sliders/HomeSlider.vue"),
+    },
+    {
+      path: "/genreslider",
+      component: () => import("../components/sliders/GenresSlider.vue"),
+    },
+    {
       path: "/about",
       name: "about",
       // route level code-splitting

@@ -12,7 +12,7 @@ const movies = ref([]);
 const swiperOptions = {
   modules: [Navigation, Autoplay],
   autoplayConfig: {
-    delay: 7000,
+    delay: 2000,
     disableOnIteraction: false,
     pauseOnMouseEnter: true,
   },
