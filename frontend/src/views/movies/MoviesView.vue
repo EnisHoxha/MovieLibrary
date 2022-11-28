@@ -4,20 +4,24 @@ import { ref, onMounted } from "vue";
 import { useAuthStore } from "../../store/auth";
 import { storeToRefs } from "pinia";
 import Header from "../../components/HeaderComponent.vue";
+import { usePaginationStore } from "../../store/pagination";
 
 const auth_store = useAuthStore();
+const pagination_store = usePaginationStore();
 const user = auth_store.getAuth;
 const movies = ref([]);
-const all_movie_length = ref([]);
-const limit = ref();
+const all_movie_length = ref(0);
+const pageLimit = ref();
+pageLimit.value = pagination_store.getPage;
 const error = ref();
 
 const getMovies = async () => {
   await axios
-    .get(`http://localhost:5002/api/movies/?limit=3`)
+    .get(`http://localhost:5002/api/movies/?limit=${pageLimit.value}`)
     .then((res) => {
       movies.value = res.data.movies;
-      limit.value = movies.value.length;
+      // limit.value = movies.value.length;
+      pagination_store.changePage(movies.value.length);
     })
     .catch((error) => {
       console.log(error);
@@ -34,14 +38,15 @@ const getMovies = async () => {
 };
 
 const loadMore = async () => {
-  limit.value = movies.value.length + 3;
+  pagination_store.changePage(movies.value.length + 3);
+  pageLimit.value = pagination_store.getPage;
   var element = document.getElementById("spiner");
   element.classList.toggle("hidden");
   await axios
-    .get(`http://localhost:5002/api/movies/?limit=${limit.value}`)
+    .get(`http://localhost:5002/api/movies/?limit=${pageLimit.value}`)
     .then((res) => {
       movies.value = res.data.movies;
-      limit.value = movies.value.length;
+      pageLimit.value = pagination_store.getPage;
       element.classList.toggle("hidden");
     })
     .catch((error) => {
@@ -57,30 +62,44 @@ onMounted(() => {
 <template>
   <Header />
   <section class="px-6 mx-5 t-8">
-    <h1 class="uppercase mt-5 text-yellow-500 text-lg font-semibold">
-      Popular Movies
-    </h1>
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between  mt-5 ">
+      <h1 class="uppercase  text-yellow-500 text-lg font-semibold">
+        Popular Movies
+      </h1>
+
+      <div class="flex items-center  ">
+        <label for="countries" class="block mr-1  text-sm font-medium text-gray-900 dark:text-white">Filter:</label>
+        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:p-2 p-1   dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          <option selected>Select filtering</option>
+          <option value="US">Newest</option>
+          <option value="CA">Imdb_rating</option>
+          <option value="FR"> New in release_date</option>
+        </select>
+      </div>
+    </div>
+
     <div class="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-5 gap-6 pt-3">
 
       <div v-for="movie in movies" :key="movie.id">
         <router-link :to="`/movies/${movie._id}`">
           <img :src="'http://localhost:5002/static/'+ movie.poster_img" class="h-3/4 w-full rounded-sm hover:opacity-75  object-fill  tansition easy-in-out duration-150" />
-        </router-link>
-        <h1 v-bind:title="movie.movie_title" class="	truncate captalize  text-md pt-3 pl-1   font-semibold  text-gray-900 dark:text-white">{{movie.movie_title}}</h1>
-        <div class=" flex">
-          <svg class="fill-current text-yellow-500 w-4 h-4 mt-1" viewBox="0 0 24 24">
-            <g data-name="Layer 2">
-              <path d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z" data-name="star" />
-            </g>
-          </svg><span class="ml-2 dark:text-stone-300">{{movie.imdb_rating}} | {{movie.release_date}} </span><br />
-        </div>
-        <div class="flex truncate">
-          <span class="text-sm text-gray-500" v-for="genre in movie.genres" :key="genre.id">
-            <span class="truncate   rounded px-1 py-1 text-xs text-gray-500  ">
-              {{genre}}
+
+          <h1 v-bind:title="movie.movie_title" class="	truncate captalize  text-md pt-3 pl-1   font-semibold  text-gray-900 dark:text-white">{{movie.movie_title}}</h1>
+          <div class=" flex items-center text-sm">
+            <svg class="fill-current text-yellow-500 w-4 h-4  " viewBox="0 0 24 24">
+              <g data-name="Layer 2">
+                <path d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z" data-name="star" />
+              </g>
+            </svg><span class="ml-2 dark:text-stone-300">{{movie.imdb_rating}} | {{movie.release_date}} </span><br />
+          </div>
+          <div class="flex truncate">
+            <span class="text-sm text-gray-500" v-for="genre in movie.genres" :key="genre.id">
+              <span class="truncate   rounded px-1 py-1 text-xs text-gray-500  ">
+                {{genre}}
+              </span>
             </span>
-          </span>
-        </div>
+          </div>
+        </router-link>
       </div>
     </div>
 
@@ -95,7 +114,7 @@ onMounted(() => {
         <span class="sr-only">Loading...</span>
       </div>
 
-      <div class=" p-4 sm:p-6 sm:mt-2  constainer mx-auto flex justify-center" v-if="limit < all_movie_length">
+      <div class=" p-4 sm:p-6 sm:mt-2  constainer mx-auto flex justify-center" v-if=" pageLimit < all_movie_length ">
         <button @click="loadMore()" class="dark:text-white text-xl font-bold bg-yellow-500 p-3 rounded-sm ">Load More</button>
       </div>
 

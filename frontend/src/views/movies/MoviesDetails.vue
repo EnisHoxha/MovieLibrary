@@ -2,10 +2,19 @@
 import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import { useWishlistStore } from "../../store/wishlist";
+import _ from "lodash";
+import { useToast } from "vue-toastification";
 import Header from "../../components/HeaderComponent.vue";
 const router = useRouter();
 const route = useRoute();
+const wishlist_store = useWishlistStore();
+const toast = useToast();
 const movie = ref({});
+
+console.log(wishlist_store.movies);
+const movies = localStorage.getItem("movies");
+console.log("movies list" + movies);
 
 const getMovie = () => {
   axios
@@ -13,12 +22,25 @@ const getMovie = () => {
       withCredentials: true,
     })
     .then((res) => {
-      console.log(res.data.movie);
+      // console.log(res.data.movie);
       movie.value = res.data.movie;
     })
     .catch((error) => {
       console.log(error);
     });
+};
+
+const addWishlist = (movie) => {
+  const data = _.find(wishlist_store.getMovies, movie);
+  if (data) {
+    toast.error("Movie already in wishlist");
+    console.log("product already in wishlist");
+    console.log(wishlist_store.getMovies);
+  } else {
+    wishlist_store.addMovie(movie);
+    toast.success("Movie successfully added to wishlist");
+    console.log("Product successfully added to wishlist");
+  }
 };
 
 onMounted(() => {
@@ -35,7 +57,7 @@ onMounted(() => {
         <img :src="'http://localhost:5002/static/'+movie.poster_img" alt="" class="h-full w-80 rounded-md  object-fill dark:opacity-80" />
         <div class="lg:ml-24 sm:ml-2">
           <h1 class="md:text-4xl text-xl dark:text-zinc-50 font-semibold">{{ movie.movie_title }}</h1>
-          <span class="text-gray-500 text-sm flex">
+          <span class="text-gray-500 text-xs md:text-sm flex ">
             <svg class="fill-current text-yellow-500 w-4 h-4 mr-1" viewBox="0 0 24 24">
               <g data-name="Layer 2">
                 <path d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z" data-name="star" />
@@ -45,7 +67,7 @@ onMounted(() => {
 
             <span :key="index" v-for="(item, index) in movie.genres" class="ml-1">
               {{ item}}
-              <span v-if="movie.genres.length - 1 != index">,</span>
+              <span v-if="movie.genres.length - 1 != index" class="ml-1">,</span>
             </span>
           </span>
           <p class="mt-5 flex items-center text-zinc-50">
@@ -79,13 +101,14 @@ onMounted(() => {
               <span class="ml-3">Play Trailer</span>
             </a>
 
-            <a href="#" class="rounded bg-yellow-500 px-5 py-3 inline-flex items-center text-black  ml-5">
+            <button @click="addWishlist(movie)" class="rounded bg-yellow-500 px-5 py-3 inline-flex items-center text-black  ml-5">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
               </svg>
 
               <span class="ml-3">Favourite</span>
-            </a>
+            </button>
+
           </div>
         </div>
       </div>

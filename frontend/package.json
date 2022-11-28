@@ -13,11 +13,14 @@
     "crypto-js": "^4.1.1",
     "dayjs": "^1.11.6",
     "form-data": "^4.0.0",
+    "lodash": "^4.17.21",
     "pinia": "^2.0.23",
     "swiper": "^8.4.5",
+    "vee-validate": "^4.7.3",
     "vue": "^3.2.41",
     "vue-cookies": "^1.8.2",
-    "vue-router": "^4.1.5"
+    "vue-router": "^4.1.5",
+    "vue-toastification": "^2.0.0-rc.5"
   },
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.1.4",

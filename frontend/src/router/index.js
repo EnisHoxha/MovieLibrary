@@ -36,6 +36,7 @@ const router = createRouter({
         requireAuth: true,
       },
     },
+
     {
       path: "/signup",
       name: "signup",
@@ -83,6 +84,16 @@ const router = createRouter({
           return { name: "home" };
         }
       },
+    },
+    {
+      path: "/admin",
+      name: "admin",
+      component: () => import("../views/users/AdminPanel.vue"),
+    },
+    {
+      path: "/user",
+      name: "user",
+      component: () => import("../views/users/UserPanel.vue"),
     },
 
     {

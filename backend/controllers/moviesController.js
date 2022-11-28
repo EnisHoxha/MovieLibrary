@@ -19,8 +19,10 @@ const getMovie = asyncWrapper(async (req, res) => {
 });
 
 const createMovie = asyncWrapper(async (req, res) => {
+  // console.log(req.files);
   // console.log(req.files.featured_image[0].filename);
   // console.log(req.files.image[0].filename);
+  // console.log(req.body);
   try {
     const movie = await Movies.create({
       ...req.body,

@@ -2,12 +2,14 @@
 import { RouterLink, RouterView } from "vue-router";
 import axios from "axios";
 import { useAuthStore } from "./store/auth";
+import { useWishlistStore } from "./store/wishlist";
 import { storeToRefs } from "pinia";
 import { onMounted, ref, inject } from "vue";
 
 const $cookies = inject("$cookies");
 const products = ref([]);
 const auth_store = useAuthStore();
+const wishlist_store = useWishlistStore();
 var isDark = ref();
 
 const setUserRole = () => {
@@ -24,9 +26,17 @@ const darkMode = () => {
   }
 };
 
+const getWishlist = () => {
+  const movies = JSON.parse(localStorage.getItem("movies"));
+  if (movies) {
+    wishlist_store.movies = movies;
+  }
+};
+
 onMounted(() => {
   setUserRole();
   darkMode();
+  getWishlist();
 });
 </script>
 

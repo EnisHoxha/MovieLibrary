@@ -75,11 +75,11 @@ onMounted(() => {
       <swiper-slide v-for="movie in movies.movie" :key="movie.id">
         <div>
           <router-link :to="`/movies/${movie._id}`">
-            <img :src="'http://localhost:5002/static/'+ movie.featured_img" class="h-[50vh] sm:h-[70vh] md:h-[80vh] w-full rounded-[12px] object-cover sm:object-fill rounded-md opacity-100 dark:opacity-50  tansition easy-in-out duration-150" />
+            <img :src="'http://localhost:5002/static/'+ movie.featured_img" class="h-[50vh] sm:h-[70vh] md:h-[60vh] lg:h-[90vh] w-full rounded-[12px] object-cover sm:object-fill rounded-md opacity-100 dark:opacity-75  tansition easy-in-out duration-150" />
           </router-link>
           <div class="sm:absolute bottom-20 left-6">
             <router-link :to="`/movies/${movie._id}`">
-              <h1 v-bind:title="movie.movie_title" class="	truncate captalize  sm:text-4xl pt-3 pl-1   font-semibold  text-gray-900 sm:text-white dark:text-white">{{movie.movie_title}}</h1>
+              <h1 v-bind:title="movie.movie_title" class="	truncate captalize  sm:text-4xl pt-3 pl-1  font-semibold  sm:text-white dark:text-white text-gray-900">{{movie.movie_title}}</h1>
               <div class=" flex items-center ">
                 <svg class="fill-current text-yellow-500 w-3 h-3  " viewBox="0 0 24 24">
                   <g data-name="Layer 2">
