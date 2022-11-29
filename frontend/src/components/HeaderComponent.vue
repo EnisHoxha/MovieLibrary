@@ -37,7 +37,7 @@ const logOut = async () => {
     user_auth: "user_auth",
   };
   await axios
-    .post("http://node.app.com:5002/api/auth/logout", tokens, {
+    .post("http://localhost:5002/api/auth/logout", tokens, {
       withCredentials: true,
     })
     .then((res) => {
@@ -73,8 +73,8 @@ onMounted(() => {
 
 <template >
   <nav class="bg-white border-gray-200 px-2 sm:px-4 py-2.5  shadow-lg shadow-gray-100 dark:bg-gray-900 dark:shadow-md dark:shadow-slate-800">
-    <div class="container flex flex-wrap items-center justify-between mx-auto">
-      <router-link to="/" class="flex items-center">
+    <div class=" flex flex-wrap items-center justify-between md:px-6">
+      <router-link to="/" class="flex sm:items-center">
         <img src="https://flowbite.com/docs/images/logo.svg" class="h-6 mr-3 sm:h-9" alt="MovieLibrary Logo" />
         <span class="self-center text-md md:text:xl font-semibold whitespace-nowrap dark:text-white">MovieLibrary</span>
       </router-link>
@@ -154,7 +154,12 @@ onMounted(() => {
             <a href="#" class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">Genres</a>
           </li>
           <li v-if="auth_store.getAuth">
-            <a href="#" class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent hover:underline md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">My Account</a>
+            <router-link v-if="auth_store.auth ==='admin'" to="/admin" class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent hover:underline md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
+              My Account
+            </router-link>
+            <router-link v-else to="/user" class="block py-2 pl-3 pr-4 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent hover:underline md:hover:text-blue-700 md:p-0 dark:text-gray-400 md:dark:hover:text-white dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent dark:border-gray-700">
+              My Account
+            </router-link>
           </li>
         </ul>
       </div>

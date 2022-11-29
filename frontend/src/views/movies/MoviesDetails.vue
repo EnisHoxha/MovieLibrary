@@ -92,7 +92,16 @@ onMounted(() => {
             <p class="font-light text-sm ">{{movie.description}}</p>
           </div>
           <div class="mt-5 flex flex font-medium text-xs md:text-base ">
-            <a href="#" class="rounded bg-yellow-500 px-5 py-3 first-letter:sm:py-3 inline-flex items-center  text-black ">
+            <a v-if="movie.movie_link" :href="`${movie.movie_link}`" target="_blank" class="rounded bg-yellow-500 px-5 py-3 first-letter:sm:py-3 inline-flex items-center  text-black ">
+              <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+              </svg>
+
+              <span class="ml-3">Play Trailer</span>
+            </a>
+
+            <a v-else href="" class="rounded bg-yellow-500 px-5 py-3 first-letter:sm:py-3 inline-flex items-center  text-black ">
               <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
                 <path d="M0 0h24v24H0z" fill="none" />
                 <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />

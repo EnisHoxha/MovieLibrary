@@ -9,6 +9,7 @@ const MovieSchema = new mongoose.Schema({
     max: 400000000,
     default: 1,
   },
+  movie_link: { type: String },
   actors: { type: [], required: true },
   genres: { type: [], required: true },
   poster_img: { type: String },

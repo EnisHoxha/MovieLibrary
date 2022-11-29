@@ -28,11 +28,11 @@ const removeMovie = (movie) => {
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 pt-3">
 
-      <div v-for="movie in wishlist_store.movies" :key="movie.id" class="shadow-sm shadow-black ">
+      <div v-for="movie in wishlist_store.movies" :key="movie.id" class="shadow-md ">
         <router-link :to="`/movies/${movie._id}`">
           <img :src="'http://localhost:5002/static/'+ movie.poster_img" class="h-3/4 w-full rounded-sm hover:opacity-75  object-fill  tansition easy-in-out duration-150" />
 
-          <h1 v-bind:title="movie.movie_title" class="	truncate captalize  text-md pt-3 pl-1   font-semibold  text-gray-900 dark:text-white">{{movie.movie_title}}</h1>
+          <h1 v-bind:title="movie.movie_title" class="	truncate captalize text-md pt-3 pl-1  font-semibold  text-gray-900 dark:text-white">{{movie.movie_title}}</h1>
           <div class=" flex text-sm">
             <svg class="fill-current text-yellow-500 w-4 h-4 mt-1" viewBox="0 0 24 24">
               <g data-name="Layer 2">

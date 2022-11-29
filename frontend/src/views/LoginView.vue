@@ -16,7 +16,7 @@ const login = async () => {
     password: password.value,
   };
   axios
-    .post("http://node.app.com:5002/api/auth/login", newUser, {
+    .post("http://localhost:5002/api/auth/login", newUser, {
       withCredentials: true,
     })
     .then(

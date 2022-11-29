@@ -2,11 +2,14 @@
 import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
+import { useToast } from "vue-toastification";
 
 const router = useRouter();
+const toast = useToast();
 
 const movie_title = ref("");
 const budget = ref(0);
+const movie_link = ref("");
 const actors = ref([]);
 const directors = ref([]);
 const genres = ref([]);
@@ -34,9 +37,16 @@ const upload = async () => {
   const formData = new FormData();
   formData.append("movie_title", movie_title.value);
   formData.append("budget", budget.value);
-  formData.append("actors", actors.value);
-  formData.append("directors", directors.value);
-  let genre = genres.value.split(" ");
+  formData.append("movie_link", movie_link.value);
+  let actor = actors.value.split(";");
+  for (let i = 0; i < actor.length; i++) {
+    formData.append("actors", actor[i]);
+  }
+  let director = directors.value.split(";");
+  for (let i = 0; i < director.length; i++) {
+    formData.append("directors", director[i]);
+  }
+  let genre = genres.value.split(";");
   for (let i = 0; i < genre.length; i++) {
     formData.append("genres", genre[i]);
   }
@@ -53,9 +63,11 @@ const upload = async () => {
   await axios
     .post("http://localhost:5002/api/movies", formData)
     .then((res) => {
-      router.go();
+      toast.success("Movie saved sucessfully");
+      // router.go();
     })
     .catch((error) => {
+      toast.error("Something went wrong!");
       console.log(error);
     });
 };
@@ -127,11 +139,14 @@ const upload = async () => {
           <input v-model="genres" type="text" id="genres" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Action" required>
         </div>
         <div class="mb-6">
-
           <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Movie description</label>
           <textarea v-model="description" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Short movie description here..."></textarea>
-
         </div>
+        <div class="mb-6">
+          <label for="movie_link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Movie link</label>
+          <input v-model="movie_link" type="text" id="movie_link" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="https://example.com" required>
+        </div>
+
       </div>
 
       <button @click.prevent="upload()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Movie</button>

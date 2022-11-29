@@ -1,6 +1,7 @@
 const User = require("../models/users");
 const { StatusCodes } = require("http-status-codes");
 const { UnauthenticatedError, BadRequestError } = require("../errors");
+var CryptoJS = require("crypto-js");
 require("dotenv").config();
 
 const register = async (req, res) => {
@@ -34,7 +35,13 @@ const login = async (req, res) => {
     maxAge: process.env.COOKIE_MAX_AGE,
   });
 
-  res.cookie("user_auth", user.role, {
+  const secure_key = process.env.CRYPTOJS_KEY
+  const encryptedRole = CryptoJS.AES.encrypt(
+    user.role,
+    secure_key
+  ).toString();
+
+  res.cookie("user_auth", encryptedRole, {
     maxAge: process.env.COOKIE_MAX_AGE,
   });
   res
@@ -42,4 +49,11 @@ const login = async (req, res) => {
     .json({ user: { name: user.name, role: user.role }, token });
 };
 
-module.exports = { register, login };
+const logout = async (req,res)=>{
+  const {token,user_auth} = req.body
+   await res.clearCookie(token);
+   await res.clearCookie(user_auth)
+   res.end()
+}
+
+module.exports = { register, login,logout };
