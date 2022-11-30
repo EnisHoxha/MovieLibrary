@@ -4,6 +4,8 @@ import { useRouter, useRoute } from "vue-router";
 import { useAuthStore } from "../store/auth";
 import { storeToRefs } from "pinia";
 import axios from "axios";
+const host = import.meta.env.VITE_API_URL;
+
 const router = useRouter();
 const route = useRoute();
 const $cookies = inject("$cookies");
@@ -37,7 +39,7 @@ const logOut = async () => {
     user_auth: "user_auth",
   };
   await axios
-    .post("http://localhost:5002/api/auth/logout", tokens, {
+    .post(`${host}/api/auth/logout`, tokens, {
       withCredentials: true,
     })
     .then((res) => {

@@ -5,7 +5,7 @@ import { useAuthStore } from "../../store/auth";
 import { storeToRefs } from "pinia";
 import Header from "../../components/HeaderComponent.vue";
 import { usePaginationStore } from "../../store/pagination";
-
+const host = import.meta.env.VITE_API_URL;
 const auth_store = useAuthStore();
 const pagination_store = usePaginationStore();
 const user = auth_store.getAuth;
@@ -17,7 +17,9 @@ const error = ref();
 
 const getMovies = async () => {
   await axios
-    .get(`http://localhost:5002/api/movies/?limit=${pageLimit.value}`)
+    .get(`${host}/api/movies/?limit=${pageLimit.value}`, {
+      withCredentials: true,
+    })
     .then((res) => {
       movies.value = res.data.movies;
       // limit.value = movies.value.length;
@@ -28,7 +30,7 @@ const getMovies = async () => {
     });
 
   await axios
-    .get("http://localhost:5002/api/movies")
+    .get(`${host}/api/movies`, { withCredentials: true })
     .then((res) => {
       all_movie_length.value = res.data.movies.length;
     })
@@ -43,7 +45,9 @@ const loadMore = async () => {
   var element = document.getElementById("spiner");
   element.classList.toggle("hidden");
   await axios
-    .get(`http://localhost:5002/api/movies/?limit=${pageLimit.value}`)
+    .get(`${host}/api/movies/?limit=${pageLimit.value}`, {
+      withCredentials: true,
+    })
     .then((res) => {
       movies.value = res.data.movies;
       pageLimit.value = pagination_store.getPage;
@@ -82,7 +86,7 @@ onMounted(() => {
 
       <div v-for="movie in movies" :key="movie.id">
         <router-link :to="`/movies/${movie._id}`">
-          <img :src="'http://localhost:5002/static/'+ movie.poster_img" class="h-3/4 w-full rounded-sm hover:opacity-75  object-fill  tansition easy-in-out duration-150" />
+          <img :src="`${host}/static/`+ movie.poster_img" class="h-3/4 w-full rounded-sm hover:opacity-75  object-fill  tansition easy-in-out duration-150" />
 
           <h1 v-bind:title="movie.movie_title" class="	truncate captalize  text-md pt-3 pl-1   font-semibold  text-gray-900 dark:text-white">{{movie.movie_title}}</h1>
           <div class=" flex items-center text-sm">

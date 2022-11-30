@@ -3,22 +3,24 @@ import axios from "axios";
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useWishlistStore } from "../../store/wishlist";
+import { useAuthStore } from "../../store/auth";
 import _ from "lodash";
 import { useToast } from "vue-toastification";
 import Header from "../../components/HeaderComponent.vue";
+const host = import.meta.env.VITE_API_URL;
+
 const router = useRouter();
 const route = useRoute();
+const auth_store = useAuthStore();
 const wishlist_store = useWishlistStore();
 const toast = useToast();
 const movie = ref({});
 
-console.log(wishlist_store.movies);
 const movies = localStorage.getItem("movies");
-console.log("movies list" + movies);
 
-const getMovie = () => {
-  axios
-    .get("http://localhost:5002/api/movies/" + route.params.id, {
+const getMovie = async () => {
+  await axios
+    .get(`${host}/api/movies/` + route.params.id, {
       withCredentials: true,
     })
     .then((res) => {
@@ -34,13 +36,18 @@ const addWishlist = (movie) => {
   const data = _.find(wishlist_store.getMovies, movie);
   if (data) {
     toast.error("Movie already in wishlist");
-    console.log("product already in wishlist");
-    console.log(wishlist_store.getMovies);
+    // console.log("product already in wishlist");
+    // console.log(wishlist_store.getMovies);
   } else {
     wishlist_store.addMovie(movie);
     toast.success("Movie successfully added to wishlist");
-    console.log("Product successfully added to wishlist");
+    // console.log("Product successfully added to wishlist");
   }
+};
+
+const playTrailer = () => {
+  const element = document.getElementById("playTrailer");
+  element.classList.toggle("hidden");
 };
 
 onMounted(() => {
@@ -54,7 +61,7 @@ onMounted(() => {
 
     <div>
       <div class=" container gap-4 mx-auto flex flex-col sm:flex-row mt-6 md:mt-20 border-b p-8   border-gray-600  md:mb-2  ">
-        <img :src="'http://localhost:5002/static/'+movie.poster_img" alt="" class="h-full w-80 rounded-md  object-fill dark:opacity-80" />
+        <img :src="`${host}/static/`+movie.poster_img" alt="" class="h-full w-80 rounded-md  object-fill dark:opacity-80" />
         <div class="lg:ml-24 sm:ml-2">
           <h1 class="md:text-4xl text-xl dark:text-zinc-50 font-semibold">{{ movie.movie_title }}</h1>
           <span class="text-gray-500 text-xs md:text-sm flex ">
@@ -92,14 +99,22 @@ onMounted(() => {
             <p class="font-light text-sm ">{{movie.description}}</p>
           </div>
           <div class="mt-5 flex flex font-medium text-xs md:text-base ">
-            <a v-if="movie.movie_link" :href="`${movie.movie_link}`" target="_blank" class="rounded bg-yellow-500 px-5 py-3 first-letter:sm:py-3 inline-flex items-center  text-black ">
+            <!-- <a v-if="movie.movie_link" :href="`${movie.movie_link}`" target="_blank" class="rounded bg-yellow-500 px-5 py-3 first-letter:sm:py-3 inline-flex items-center  text-black ">
               <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
                 <path d="M0 0h24v24H0z" fill="none" />
                 <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
               </svg>
 
               <span class="ml-3">Play Trailer</span>
-            </a>
+            </a> -->
+
+            <button v-if="movie.movie_link" @click="playTrailer" class="rounded bg-yellow-500 px-5 py-3 first-letter:sm:py-3 inline-flex items-center  text-black ">
+              <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z" />
+              </svg>
+              <span class="ml-3">Play Trailer</span>
+            </button>
 
             <a v-else href="" class="rounded bg-yellow-500 px-5 py-3 first-letter:sm:py-3 inline-flex items-center  text-black ">
               <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
@@ -110,7 +125,7 @@ onMounted(() => {
               <span class="ml-3">Play Trailer</span>
             </a>
 
-            <button @click="addWishlist(movie)" class="rounded bg-yellow-500 px-5 py-3 inline-flex items-center text-black  ml-5">
+            <button :disabled="!auth_store.auth" @click="addWishlist(movie)" class="rounded bg-yellow-500 px-5 py-3 inline-flex items-center text-black  ml-5">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
               </svg>
@@ -143,6 +158,17 @@ onMounted(() => {
           More like this
         </h1>
       </div>
+
+      <!-- Play trailer section -->
+      <div class="hidden px-10 py-6 md:px-20 h-screen w-screen flex flex-col  fixed top-0 right-0 bottom-0 bg-black " id="playTrailer">
+        <div class="flex justify-end mb-6 dark:text-white ">
+          <button @click="playTrailer" class="bg-yellow-500 rounded  sm:w-10 right-0 p-1 pointer-events-auto"> <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg></button>
+        </div>
+        <iframe class="h-full  w-full mx-auto" :src="`${movie.movie_link}`" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <!-- End of play trailer section -->
     </div>
   </section>
 </template>

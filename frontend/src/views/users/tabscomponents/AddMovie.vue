@@ -3,6 +3,7 @@ import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
+const host = import.meta.env.VITE_API_URL;
 
 const router = useRouter();
 const toast = useToast();
@@ -61,7 +62,9 @@ const upload = async () => {
   formData.append("description", description.value);
 
   await axios
-    .post("http://localhost:5002/api/movies", formData)
+    .post(`${host}/api/movies`, formData, {
+      withCredentials: true,
+    })
     .then((res) => {
       toast.success("Movie saved sucessfully");
       // router.go();

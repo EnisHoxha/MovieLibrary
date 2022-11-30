@@ -11,6 +11,7 @@ import Footer from "../components/FooterComponent.vue";
 
 import { useAuthStore } from "../store/auth";
 import { storeToRefs } from "pinia";
+const host = import.meta.env.VITE_API_URL;
 const $cookies = inject("$cookies");
 const router = useRouter();
 const route = useRoute();
@@ -45,8 +46,8 @@ const signUp = async () => {
     email: email.value,
     password: password.value,
   };
-  axios
-    .post("http://localhost:5002/api/auth/register", newUser, {
+  await axios
+    .post(`${host}/api/auth/register`, newUser, {
       withCredentials: true,
     })
     .then(

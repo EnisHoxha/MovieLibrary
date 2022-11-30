@@ -91,6 +91,11 @@ const router = createRouter({
       component: () => import("../views/users/AdminPanel.vue"),
     },
     {
+      path: "/movie_edit/:id",
+      name: "movie_edit",
+      component: () => import("../views/users/EditPanel.vue"),
+    },
+    {
       path: "/user",
       name: "user",
       component: () => import("../views/users/UserPanel.vue"),

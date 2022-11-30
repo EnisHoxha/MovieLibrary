@@ -3,7 +3,9 @@ require("@rushstack/eslint-patch/modern-module-resolution");
 
 module.exports = {
   root: true,
-  rules: { "no-unused-vars": "off" },
+  rules: {
+    "no-unused-vars": "off",
+  },
 
   extends: [
     "plugin:vue/vue3-essential",

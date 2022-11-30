@@ -5,6 +5,7 @@ import axios from "axios";
 import Header from "../components/HeaderComponent.vue";
 import Footer from "../components/FooterComponent.vue";
 
+const host = import.meta.env.VITE_API_URL;
 const router = useRouter();
 const email = ref();
 const password = ref();
@@ -15,8 +16,8 @@ const login = async () => {
     email: email.value,
     password: password.value,
   };
-  axios
-    .post("http://localhost:5002/api/auth/login", newUser, {
+  await axios
+    .post(`${host}/api/auth/login`, newUser, {
       withCredentials: true,
     })
     .then(

@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useWishlistStore } from "../../../store/wishlist";
+const host = import.meta.env.VITE_API_URL;
 const wishlist_store = useWishlistStore();
 
 const removeMovie = (movie) => {
@@ -30,7 +31,7 @@ const removeMovie = (movie) => {
 
       <div v-for="movie in wishlist_store.movies" :key="movie.id" class="shadow-md ">
         <router-link :to="`/movies/${movie._id}`">
-          <img :src="'http://localhost:5002/static/'+ movie.poster_img" class="h-3/4 w-full rounded-sm hover:opacity-75  object-fill  tansition easy-in-out duration-150" />
+          <img :src="`${host}/static/`+ movie.poster_img" class="h-3/4 w-full rounded-sm hover:opacity-75  object-fill  tansition easy-in-out duration-150" />
 
           <h1 v-bind:title="movie.movie_title" class="	truncate captalize text-md pt-3 pl-1  font-semibold  text-gray-900 dark:text-white">{{movie.movie_title}}</h1>
           <div class=" flex text-sm">

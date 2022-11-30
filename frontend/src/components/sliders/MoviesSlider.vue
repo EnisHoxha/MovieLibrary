@@ -6,6 +6,7 @@ import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from "swiper";
 import "swiper/css/navigation";
 import "swiper/css";
 import axios from "axios";
+const host = import.meta.env.VITE_API_URL;
 
 const movies = ref([]);
 
@@ -51,7 +52,7 @@ const swiperOptions = {
 
 const getMovies = async () => {
   await axios
-    .get("http://localhost:5002/api/movies/typeMovie")
+    .get(`${host}/api/movies/typeMovie`, { withCredentials: true })
     .then((res) => {
       movies.value = res.data;
       //   console.log(res.data);

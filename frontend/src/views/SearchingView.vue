@@ -4,6 +4,8 @@ import { useRouter, useRoute } from "vue-router";
 import axios from "axios";
 import Header from "../components/HeaderComponent.vue";
 import MovieNotFound from "../components/notfound/MovieNotFound.vue";
+const host = import.meta.env.VITE_API_URL;
+
 const router = useRouter();
 const route = useRoute();
 const search_term = ref("");
@@ -23,7 +25,7 @@ watchEffect((search_term) => {
     params: params,
   };
   axios
-    .get(`http://localhost:5002/api/movies/search`, request)
+    .get(`${host}/api/movies/search`, request, { withCredentials: true })
     .then((res) => {
       movies.value = res.data.movie;
     })
@@ -43,7 +45,7 @@ watchEffect((search_term) => {
 
       <div v-for="movie in movies" :key="movie.id">
         <router-link :to="`/movies/${movie._id}`">
-          <img :src="'http://localhost:5002/static/'+ movie.poster_img" class="h-3/4 w-full hover:opacity-75  object-fill  tansition easy-in-out duration-150" />
+          <img :src="`${host}/static/`+ movie.poster_img" class="h-3/4 w-full hover:opacity-75  object-fill  tansition easy-in-out duration-150" />
         </router-link>
         <h1 v-bind:title="movie.movie_title" class="	truncate captalize  text-md pt-3 pl-1   font-semibold  text-gray-900 dark:text-white">{{movie.movie_title}}</h1>
         <div class=" flex">
