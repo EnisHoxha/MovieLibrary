@@ -52,7 +52,9 @@ const swiperOptions = {
 
 const getMovies = async () => {
   await axios
-    .get(`${host}/api/movies/typeMovie?type=Movie`, { withCredentials: true })
+    .get(`${host}/api/movies/typeGenre?genre=Biography`, {
+      withCredentials: true,
+    })
     .then((res) => {
       movies.value = res.data;
       //   console.log(res.data);
@@ -70,7 +72,7 @@ onMounted(() => {
 
 <template>
   <section class="md:p-12 p-6 ">
-    <h1 class="md:text-4xl font-medium dark:text-white border-l-4 border-yellow-500 my-2 pl-2">Watch Movies</h1>
+    <h1 class="md:text-4xl font-medium dark:text-white border-l-4 border-yellow-500 my-2 pl-2">Biography</h1>
     <swiper :breakpoints='swiperOptions.breakpoints' :navigation="true" :loop="true" :modules="swiperOptions.modules" :autoplay="swiperOptions.autoplayConfig">
 
       <swiper-slide v-for="movie in movies.movie" :key="movie.id">
@@ -97,8 +99,6 @@ onMounted(() => {
           </div>
         </div>
       </swiper-slide>
-
-      ...
     </swiper>
   </section>
 </template>

@@ -7,16 +7,61 @@ import { useAuthStore } from "../../store/auth";
 import _ from "lodash";
 import { useToast } from "vue-toastification";
 import Header from "../../components/HeaderComponent.vue";
-const host = import.meta.env.VITE_API_URL;
+import Footer from "../../components/FooterComponent.vue";
+import { Swiper, SwiperSlide } from "swiper/vue";
+import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from "swiper";
+import "swiper/css/navigation";
+import "swiper/css";
 
+const host = import.meta.env.VITE_API_URL;
 const router = useRouter();
 const route = useRoute();
 const auth_store = useAuthStore();
 const wishlist_store = useWishlistStore();
 const toast = useToast();
 const movie = ref({});
-
+const similar_movies = ref([]);
 const movies = localStorage.getItem("movies");
+
+const swiperOptions = {
+  modules: [Navigation, Autoplay],
+  autoplayConfig: {
+    delay: 2000,
+    disableOnIteraction: false,
+    pauseOnMouseEnter: true,
+  },
+  breakpoints: {
+    320: {
+      slidesPerView: 2,
+      spaceBetween: 10,
+    },
+    400: {
+      slidesPerView: 2,
+      spaceBetween: 40,
+    },
+    414: {
+      slidesPerView: 3,
+      spaceBetween: 10,
+    },
+    640: {
+      slidesPerView: 4,
+      spaceBetween: 10,
+    },
+
+    768: {
+      slidesPerView: 4,
+      spaceBetween: 25,
+    },
+    1024: {
+      slidesPerView: 6,
+      spaceBetween: 20,
+    },
+    1280: {
+      slidesPerView: 8,
+      spaceBetween: 20,
+    },
+  },
+};
 
 const getMovie = async () => {
   await axios
@@ -24,11 +69,10 @@ const getMovie = async () => {
       withCredentials: true,
     })
     .then((res) => {
-      // console.log(res.data.movie);
       movie.value = res.data.movie;
     })
     .catch((error) => {
-      console.log(error);
+      toast.error("Something went wrong");
     });
 };
 
@@ -50,8 +94,26 @@ const playTrailer = () => {
   element.classList.toggle("hidden");
 };
 
+const similarMovies = async () => {
+  const genre = movie.value.genres[0];
+  await axios
+    .get(`${host}/api/movies/typeGenre?genre=${genre}`, {
+      withCredentials: true,
+    })
+    .then((res) => {
+      similar_movies.value = res.data;
+    })
+    .catch((error) => {
+      error.value = error;
+      console.log(error);
+    });
+};
+
 onMounted(() => {
   getMovie();
+  setTimeout(() => {
+    similarMovies();
+  }, 100);
 });
 </script>
 
@@ -153,12 +215,43 @@ onMounted(() => {
       </div>
 
       <!--Similar Movies -->
-      <div class="container flex mx-auto p-8">
-        <h1 class="dark:text-white font-bold text-3xl category pl-2 border-yellow-500  border-l-8 ">
-          More like this
-        </h1>
-      </div>
+      <div class="container mx-auto pb-8 border-b border-gray-600">
+        <div class=" pt-8  pl-8">
+          <h1 class="dark:text-white font-bold text-2xl sm:text-3xl category pl-2  border-yellow-500  border-l-8 ">
+            More like this
+          </h1>
+        </div>
+        <section class=" p-8 ">
+          <swiper :breakpoints='swiperOptions.breakpoints' :modules="swiperOptions.modules" :autoplay="swiperOptions.autoplayConfig">
+            <swiper-slide v-for="movie in similar_movies.movie" :key="movie.id">
+              <div>
+                <a :href="`/movies/${movie._id}`">
+                  <img :src="`${host}/static/`+ movie.poster_img" class="h-52 w-full object-fill rounded-sm hover:opacity-75   tansition easy-in-out duration-150" />
+                </a>
+                <h1 v-bind:title="movie.movie_title" class="	truncate captalize  text-sm pt-3 pl-1   font-semibold  text-gray-900 dark:text-white">{{movie.movie_title}}</h1>
+                <div class=" flex items-center">
+                  <svg class="fill-current text-yellow-500 w-3 h-3  " viewBox="0 0 24 24">
+                    <g data-name="Layer 2">
+                      <path d="M17.56 21a1 1 0 01-.46-.11L12 18.22l-5.1 2.67a1 1 0 01-1.45-1.06l1-5.63-4.12-4a1 1 0 01-.25-1 1 1 0 01.81-.68l5.7-.83 2.51-5.13a1 1 0 011.8 0l2.54 5.12 5.7.83a1 1 0 01.81.68 1 1 0 01-.25 1l-4.12 4 1 5.63a1 1 0 01-.4 1 1 1 0 01-.62.18z" data-name="star" />
+                    </g>
+                  </svg><span class="ml-2 dark:text-stone-300 text-xs">{{movie.imdb_rating}} | {{movie.release_date}} </span><br />
+                </div>
+                <div class="  flex truncate ">
+                  <span class=" text-gray-500" v-for="genre in movie.genres" :key="genre.id">
+                    <span class=" rounded text-xs pl-1 text-gray-500  ">
+                      {{genre}}
+                    </span>
 
+                  </span>
+
+                </div>
+              </div>
+            </swiper-slide>
+
+            ...
+          </swiper>
+        </section>
+      </div>
       <!-- Play trailer section -->
       <div class="hidden px-10 py-6 md:px-20 h-screen w-screen flex flex-col  fixed top-0 right-0 bottom-0 bg-black " id="playTrailer">
         <div class="flex justify-end mb-6 dark:text-white ">
@@ -171,6 +264,7 @@ onMounted(() => {
       <!-- End of play trailer section -->
     </div>
   </section>
+  <Footer />
 </template>
 
 <style scoped>

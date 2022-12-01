@@ -76,7 +76,7 @@ onMounted(() => {
       <swiper-slide v-for="movie in movies.movie" :key="movie.id">
         <div>
           <router-link :to="`/movies/${movie._id}`">
-            <img :src="'http://localhost:5002/static/'+ movie.featured_img" class="h-[50vh] sm:h-[70vh] md:h-[60vh] lg:h-[90vh] w-full rounded-[12px] object-cover sm:object-fill rounded-md opacity-100 dark:opacity-75  tansition easy-in-out duration-150" />
+            <img :src="`${host}/static/`+ movie.featured_img" class="h-[50vh] sm:h-[70vh] md:h-[60vh] lg:h-[90vh] w-full rounded-[12px] object-cover sm:object-fill rounded-md opacity-100 dark:opacity-75  tansition easy-in-out duration-150" />
           </router-link>
           <div class="sm:absolute bottom-20 left-6">
             <router-link :to="`/movies/${movie._id}`">

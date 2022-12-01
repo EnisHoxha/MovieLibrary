@@ -14,6 +14,7 @@ const {
   searchMovie,
   typeMovie,
   typeFeatured,
+  typeGenre,
 } = require("../controllers/moviesController");
 
 router
@@ -26,6 +27,7 @@ router
 
 router.route("/search").get(searchMovie);
 router.route("/typeMovie").get(typeMovie);
+router.route("/typeGenre").get(typeGenre);
 router.route("/typeFeatured").get(typeFeatured);
 
 router

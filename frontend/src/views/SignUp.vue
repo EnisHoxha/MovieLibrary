@@ -7,8 +7,6 @@ import CryptoJS from "crypto-js";
 import Header from "../components/HeaderComponent.vue";
 import Footer from "../components/FooterComponent.vue";
 
-// import formData from "form-data";
-
 import { useAuthStore } from "../store/auth";
 import { storeToRefs } from "pinia";
 const host = import.meta.env.VITE_API_URL;
@@ -17,28 +15,16 @@ const router = useRouter();
 const route = useRoute();
 
 const auth_store = useAuthStore();
-// const form = new formData();
 
 const name = ref();
 const email = ref();
 const password = ref();
-const tok = ref();
 const customError = ref();
 
 const user_local = ref({
   name: "",
   surname: "",
 });
-
-// const specificUser = user_store.getUsers;
-// const createAuth = () => {
-//   let value = true;
-//   auth_store.auth("true");
-// };
-
-// onMounted(() => {
-//   user_store.create(user_local);
-// });
 
 const signUp = async () => {
   let newUser = {
@@ -52,12 +38,6 @@ const signUp = async () => {
     })
     .then(
       (res) => {
-        // console.log(res.data.user.role);
-        tok.value = res.data.token;
-        // const userRole = $cookies.get("user_auth");
-        // const key = import.meta.env.VITE_CRYPTOJS_KEY;
-        // auth_store.changeAuth(userRole, key);
-        // const value = res.data.user.role;
         customError.value = "";
         router.push({ name: "home" });
         router.go();
@@ -74,10 +54,10 @@ const signUp = async () => {
   <Header />
   <section class="bg-gray-50 dark:bg-gray-900 mb-5">
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-      <a href="#" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
+      <router-link to="/" class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
         <img class="w-8 h-8 mr-2" src="https://flowbite.s3.amazonaws.com/blocks/marketing-ui/logo.svg" alt="logo">
         Join MovieLibrary community
-      </a>
+      </router-link>
       <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
           <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">

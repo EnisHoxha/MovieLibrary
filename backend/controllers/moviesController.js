@@ -112,8 +112,17 @@ const searchMovie = asyncWrapper(async (req, res) => {
 });
 
 const typeMovie = asyncWrapper(async (req, res) => {
-  const types = "Movie";
-  const movie = await Movies.find({ type: types });
+  const type = req.query.type;
+  const movie = await Movies.find({ type: type });
+  if (!movie) {
+    throw new NotFoundError(`No movies were found`);
+  }
+  res.status(StatusCodes.OK).json({ movie });
+});
+
+const typeGenre = asyncWrapper(async (req, res) => {
+  const genre = req.query.genre;
+  const movie = await Movies.find({ genres: genre });
   if (!movie) {
     throw new NotFoundError(`No movies were found`);
   }
@@ -137,5 +146,6 @@ module.exports = {
   deleteMovie,
   searchMovie,
   typeMovie,
+  typeGenre,
   typeFeatured,
 };
