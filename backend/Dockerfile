@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 RUN chown node:node ./
 COPY package*.json ./
 RUN npm ci --only=production
-COPY . .
+COPY --chown=node:node . .
 EXPOSE 5002
 USER node
 CMD ["dumb-init","npm","start"]
