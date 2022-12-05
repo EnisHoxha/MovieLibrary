@@ -4,8 +4,8 @@ const { createCustomError } = require("../errors/customError");
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
-    //path.join(__dirname, "../public/images")
-    callback(null, "public/images");
+    // path.join(__dirname, "../public/images");
+    callback(null, path.join(__dirname, "../public/images"));
   },
 
   filename: function (req, file, callback) {
