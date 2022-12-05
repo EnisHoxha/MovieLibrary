@@ -21,19 +21,21 @@ router
   .route("/")
   .get(cors(corsOptions), getMovies)
   .post(
+    cors(corsOptions),
     upload.fields([{ name: "image" }, { name: "featured_image" }]),
     createMovie
   );
 
-router.route("/search").get(searchMovie);
-router.route("/typeMovie").get(typeMovie);
-router.route("/typeGenre").get(typeGenre);
-router.route("/typeFeatured").get(typeFeatured);
+router.route("/search").get(cors(corsOptions), searchMovie);
+router.route("/typeMovie").get(cors(corsOptions), typeMovie);
+router.route("/typeGenre").get(cors(corsOptions), typeGenre);
+router.route("/typeFeatured").get(cors(corsOptions), typeFeatured);
 
 router
   .route("/:id")
-  .get(getMovie)
+  .get(cors(corsOptions), getMovie)
   .patch(
+    cors(corsOptions),
     upload.fields([{ name: "image" }, { name: "featured_image" }]),
     updateMovie
   )

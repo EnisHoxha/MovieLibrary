@@ -95,7 +95,7 @@ const playTrailer = () => {
 };
 
 const similarMovies = async () => {
-  const genre = movie.value.genres[0];
+  const genre = await movie.value.genres[0];
   await axios
     .get(`${host}/api/movies/typeGenre?genre=${genre}`, {
       withCredentials: true,
@@ -113,7 +113,7 @@ onMounted(() => {
   getMovie();
   setTimeout(() => {
     similarMovies();
-  }, 100);
+  }, 1000);
 });
 </script>
 
@@ -253,13 +253,13 @@ onMounted(() => {
         </section>
       </div>
       <!-- Play trailer section -->
-      <div class="hidden px-10 py-6 md:px-20 h-screen w-screen flex flex-col  fixed top-0 right-0 bottom-0 bg-black " id="playTrailer">
+      <div class="hidden z-50 px-10 py-6 md:px-20 h-screen w-screen flex flex-col  fixed top-0 right-0 bottom-0 bg-black " id="playTrailer">
         <div class="flex justify-end mb-6 dark:text-white ">
           <button @click="playTrailer" class="bg-yellow-500 rounded  sm:w-10 right-0 p-1 pointer-events-auto"> <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg></button>
         </div>
-        <iframe class="h-full  w-full mx-auto" :src="`${movie.movie_link}`" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
+        <iframe class="h-full  w-full " :src="`${movie.movie_link}`" title="YouTube video player" frameborder="0" allowfullscreen></iframe>
       </div>
       <!-- End of play trailer section -->
     </div>

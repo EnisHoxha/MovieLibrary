@@ -67,7 +67,9 @@ const upload = async () => {
     })
     .then((res) => {
       toast.success("Movie saved sucessfully");
-      // router.go();
+      setTimeout(() => {
+        router.go();
+      }, 1000);
     })
     .catch((error) => {
       toast.error("Something went wrong!");
