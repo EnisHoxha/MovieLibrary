@@ -47,6 +47,10 @@ const swiperOptions = {
       slidesPerView: 8,
       spaceBetween: 20,
     },
+    1920: {
+      slidesPerView: 10,
+      spaceBetween: 20,
+    },
   },
 };
 
@@ -59,7 +63,7 @@ const getMovies = async () => {
     })
     .catch((error) => {
       error.value = error;
-      console.log(error);
+      // console.log(error);
     });
 };
 
