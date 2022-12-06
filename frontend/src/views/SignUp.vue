@@ -6,14 +6,14 @@ import { useRouter, useRoute } from "vue-router";
 import CryptoJS from "crypto-js";
 import Header from "../components/HeaderComponent.vue";
 import Footer from "../components/FooterComponent.vue";
-
+import { useToast } from "vue-toastification";
 import { useAuthStore } from "../store/auth";
 import { storeToRefs } from "pinia";
 const host = import.meta.env.VITE_API_URL;
 const $cookies = inject("$cookies");
 const router = useRouter();
 const route = useRoute();
-
+const toast = useToast();
 const auth_store = useAuthStore();
 
 const name = ref();
@@ -39,10 +39,12 @@ const signUp = async () => {
     .then(
       (res) => {
         customError.value = "";
-        router.push({ name: "home" });
-        router.go();
+        toast.success("Successfully sign up,now you can login");
+        router.push({ name: "login" });
+        // router.go();
       },
       (error) => {
+        toast.error("Something went wrong!");
         customError.value = error.response.data.msg;
         console.log(error.response.data.msg);
       }
@@ -90,7 +92,7 @@ const signUp = async () => {
             <button @click.prevent="signUp()" class="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800 bg-slate-600">Sign in</button>
             <p class="text-sm font-light text-gray-500 dark:text-gray-400">
               Already registered?
-              <router-link to="/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign in</router-link>
+              <router-link to="/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500">Sign up</router-link>
             </p>
 
           </form>

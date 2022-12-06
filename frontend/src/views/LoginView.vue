@@ -4,12 +4,13 @@ import { ref } from "vue";
 import axios from "axios";
 import Header from "../components/HeaderComponent.vue";
 import Footer from "../components/FooterComponent.vue";
-
+import { useToast } from "vue-toastification";
 const host = import.meta.env.VITE_API_URL;
 const router = useRouter();
 const email = ref();
 const password = ref();
 const customError = ref();
+const toast = useToast();
 
 const login = async () => {
   let newUser = {
@@ -28,11 +29,15 @@ const login = async () => {
         // const key = import.meta.env.VITE_CRYPTOJS_KEY;
         // auth_store.changeAuth(userRole, key);
         // const value = res.data.user.role;
+        toast.success("Successfully login!");
         customError.value = "";
         router.push({ name: "home" });
-        router.go();
+        setTimeout(() => {
+          router.go();
+        }, 1000);
       },
       (error) => {
+        toast.error("Something went wrong");
         customError.value = error.response.data.msg;
         console.log(error.response.data.msg);
       }
