@@ -2,12 +2,12 @@
 import { ref, onMounted } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from "swiper";
-
+import { useToast } from "vue-toastification";
 import "swiper/css/navigation";
 import "swiper/css";
 import axios from "axios";
 const host = import.meta.env.VITE_API_URL;
-
+const toast = useToast();
 const movies = ref([]);
 
 const swiperOptions = {
@@ -59,7 +59,8 @@ const getMovies = async () => {
     })
     .catch((error) => {
       error.value = error;
-      console.log(error);
+      // console.log(error);
+      toast.error("Something went wrong!");
     });
 };
 
@@ -75,7 +76,7 @@ onMounted(() => {
 
       <swiper-slide v-for="movie in movies.movie" :key="movie.id">
         <div>
-          <router-link :to="`/movies/${movie._id}`">
+          <router-link :to=" `/movies/${movie._id}`">
             <img :src="`${host}/static/`+ movie.poster_img" class="h-52 w-full object-fill rounded-sm hover:opacity-75   tansition easy-in-out duration-150" />
           </router-link>
           <h1 v-bind:title="movie.movie_title" class="	truncate captalize  text-sm pt-3 pl-1   font-semibold  text-gray-900 dark:text-white">{{movie.movie_title}}</h1>

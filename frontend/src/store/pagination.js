@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const usePaginationStore = defineStore("pagination", {
   state: () => {
     return {
-      pageItems: 3,
+      pageItems: 10,
     };
   },
 

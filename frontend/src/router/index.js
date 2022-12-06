@@ -28,18 +28,6 @@ const router = createRouter({
       path: "/genreslider",
       component: () => import("../components/sliders/GenresSlider.vue"),
     },
-    {
-      path: "/about",
-      name: "about",
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import("../views/AboutView.vue"),
-      meta: {
-        adminAuth: true,
-        requireAuth: true,
-      },
-    },
 
     {
       path: "/signup",
@@ -93,26 +81,29 @@ const router = createRouter({
       path: "/admin",
       name: "admin",
       component: () => import("../views/users/AdminPanel.vue"),
+      meta: {
+        adminAuth: true,
+        requireAuth: true,
+      },
     },
     {
       path: "/movie_edit/:id",
       name: "movie_edit",
       component: () => import("../views/users/EditPanel.vue"),
+      meta: {
+        adminAuth: true,
+        requireAuth: true,
+      },
     },
     {
       path: "/user",
       name: "user",
       component: () => import("../views/users/UserPanel.vue"),
-    },
-
-    {
-      path: "/cart",
-      name: "cart",
-      component: () => import("../views/cartView.vue"),
       meta: {
         requireAuth: true,
       },
     },
+
     {
       path: "/:catchAll(.*)",
       component: () => import("../components/notfound/NotFound.vue"),
@@ -124,7 +115,7 @@ router.beforeEach(async (to, from) => {
   const auth_route = useAuthStore();
   if (to.meta.requireAuth) {
     if (!auth_route.getAuth) {
-      return { name: "signup" };
+      return { name: "login" };
     } else if (to.meta.adminAuth) {
       if (auth_route.getAuth === "admin") {
         return;
@@ -137,7 +128,7 @@ router.beforeEach(async (to, from) => {
     ) {
       return;
     } else {
-      return { name: "signup" };
+      return { name: "login" };
     }
   } else {
     return;

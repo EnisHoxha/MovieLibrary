@@ -46,7 +46,7 @@ const signUp = async () => {
       (error) => {
         toast.error("Something went wrong!");
         customError.value = error.response.data.msg;
-        console.log(error.response.data.msg);
+        // console.log(error.response.data.msg);
       }
     );
 };

@@ -2,12 +2,13 @@
 import { ref, onMounted } from "vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from "swiper";
+import { useToast } from "vue-toastification";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
 import axios from "axios";
 const host = import.meta.env.VITE_API_URL;
-
+const toast = useToast();
 const movies = ref([]);
 
 const swiperOptions = {
@@ -59,7 +60,8 @@ const getMovies = async () => {
     })
     .catch((error) => {
       error.value = error;
-      console.log(error);
+      // console.log(error);
+      toast.error("Something went wrong!");
     });
 };
 

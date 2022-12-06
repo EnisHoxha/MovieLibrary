@@ -105,7 +105,8 @@ const similarMovies = async () => {
     })
     .catch((error) => {
       error.value = error;
-      console.log(error);
+      // console.log(error);
+      toast.error("Something went wrong!");
     });
 };
 

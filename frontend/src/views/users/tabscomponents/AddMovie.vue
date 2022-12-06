@@ -73,7 +73,7 @@ const upload = async () => {
     })
     .catch((error) => {
       toast.error("Something went wrong!");
-      console.log(error);
+      // console.log(error);
     });
 };
 </script>

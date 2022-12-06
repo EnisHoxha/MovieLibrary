@@ -30,7 +30,7 @@ watchEffect((search_term) => {
       movies.value = res.data.movie;
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
     });
 });
 </script>

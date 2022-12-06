@@ -31,17 +31,17 @@ const login = async () => {
         // const value = res.data.user.role;
 
         customError.value = "";
-
-        // router.push({ name: "home" }).then(() => {
-        //   router.go();
-        // });
         toast.success("Successfully login!");
-        location.replace("/").then(() => {});
+        router.push({ name: "home" }).then(() => {
+          router.go();
+        });
+
+        // location.replace("/").then(() => {});
       },
       (error) => {
         toast.error("Something went wrong");
         customError.value = error.response.data.msg;
-        console.log(error.response.data.msg);
+        // console.log(error.response.data.msg);
       }
     );
 };

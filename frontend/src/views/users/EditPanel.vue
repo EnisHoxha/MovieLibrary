@@ -33,7 +33,7 @@ const getMovie = async () => {
     })
     .then((res) => {
       movie.value = res.data.movie;
-      console.log(movie.value);
+      // console.log(movie.value);
     })
     .catch((error) => {
       toast.error("Something went wrong");
@@ -78,7 +78,7 @@ const upload = async () => {
     })
     .catch((error) => {
       toast.error("Something went wrong!");
-      console.log(error);
+      // console.log(error);
     });
 };
 

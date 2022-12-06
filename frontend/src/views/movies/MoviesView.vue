@@ -5,10 +5,12 @@ import { useAuthStore } from "../../store/auth";
 import { storeToRefs } from "pinia";
 import Header from "../../components/HeaderComponent.vue";
 import { usePaginationStore } from "../../store/pagination";
+import { useToast } from "vue-toastification";
 const host = import.meta.env.VITE_API_URL;
 const auth_store = useAuthStore();
 const pagination_store = usePaginationStore();
 const user = auth_store.getAuth;
+const toast = useToast();
 const movies = ref([]);
 const all_movie_length = ref(0);
 const pageLimit = ref();
@@ -26,7 +28,8 @@ const getMovies = async () => {
       pagination_store.changePage(movies.value.length);
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
+      toast.error("Something went wrong!");
     });
 
   await axios
@@ -35,12 +38,13 @@ const getMovies = async () => {
       all_movie_length.value = res.data.movies.length;
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
+      toast.error("Something went wrong!");
     });
 };
 
 const loadMore = async () => {
-  pagination_store.changePage(movies.value.length + 3);
+  pagination_store.changePage(movies.value.length + 10);
   pageLimit.value = pagination_store.getPage;
   var element = document.getElementById("spiner");
   element.classList.toggle("hidden");
@@ -54,7 +58,8 @@ const loadMore = async () => {
       element.classList.toggle("hidden");
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
+      toast.error("Something went wrong!");
     });
 };
 
