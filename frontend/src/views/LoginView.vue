@@ -29,12 +29,14 @@ const login = async () => {
         // const key = import.meta.env.VITE_CRYPTOJS_KEY;
         // auth_store.changeAuth(userRole, key);
         // const value = res.data.user.role;
-        toast.success("Successfully login!");
+
         customError.value = "";
-        router.push({ name: "home" });
-        setTimeout(() => {
-          router.go();
-        }, 1000);
+
+        // router.push({ name: "home" }).then(() => {
+        //   router.go();
+        // });
+        toast.success("Successfully login!");
+        location.replace("/").then(() => {});
       },
       (error) => {
         toast.error("Something went wrong");
