@@ -28,7 +28,7 @@ const MovieSchema = new mongoose.Schema({
   },
   runtime: {
     type: Number,
-    min: [75, "Movie Runtime cant be less than 75 Minutes"],
+    min: [30, "Movie Runtime cant be less than 30 Minutes"],
     max: [180, "Movie Runtime cant be more than 2 Hours"],
   },
   adult: { type: Boolean, default: false },

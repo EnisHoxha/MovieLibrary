@@ -9,6 +9,7 @@ import ActionSlider from "../components/sliders/genres/ActionSlider.vue";
 import DramaSlider from "../components/sliders/genres/DramaSlider.vue";
 import BiographySlider from "../components/sliders/genres/BiographySlider.vue";
 import HomeSlider from "../components/sliders/HomeSlider.vue";
+import WarSlider from "../components/sliders/genres/WarSlider.vue";
 
 // const isDark = useDark();
 // const toggleDark = useToggle(isDark);
@@ -53,5 +54,6 @@ onMounted(() => {
   <ActionSlider />
   <DramaSlider />
   <BiographySlider />
+  <WarSlider />
   <Footer />
 </template>

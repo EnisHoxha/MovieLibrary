@@ -110,6 +110,10 @@ const similarMovies = async () => {
     });
 };
 
+function closeVideo() {
+  router.go();
+}
+
 onMounted(() => {
   getMovie();
   setTimeout(() => {
@@ -256,7 +260,7 @@ onMounted(() => {
       <!-- Play trailer section -->
       <div class="hidden z-50 px-10 py-6 md:px-20 h-screen w-screen flex flex-col  fixed top-0 right-0 bottom-0 bg-black " id="playTrailer">
         <div class="flex justify-end mb-6 dark:text-white ">
-          <button @click="playTrailer" class="bg-yellow-500 rounded  sm:w-10 right-0 p-1 pointer-events-auto"> <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <button @click="playTrailer();closeVideo()" class="bg-yellow-500 rounded  sm:w-10 right-0 p-1 pointer-events-auto"> <svg class="w-6 h-6 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
             </svg></button>
         </div>

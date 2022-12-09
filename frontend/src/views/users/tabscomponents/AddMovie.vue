@@ -3,8 +3,9 @@ import { ref } from "vue";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import { useToast } from "vue-toastification";
+import { Form, Field } from "vee-validate";
+import * as yup from "yup";
 const host = import.meta.env.VITE_API_URL;
-
 const router = useRouter();
 const toast = useToast();
 
@@ -18,11 +19,45 @@ const original_language = ref("");
 const image = ref("");
 const featured_image = ref("");
 const release_date = ref("");
-const runtime = ref("");
+const runtime = ref(0);
 const imdb_rating = ref(0);
 const type = ref("");
 const film_studio = ref("");
 const description = ref("");
+
+const schema = yup.object().shape({
+  movie_title: yup.string().required(),
+  budget: yup
+    .number()
+    .min(7000, "budget can't be less than 70000$")
+    .max(400000000, "budget can't be more than 400000000$")
+    .required(),
+  image: yup.mixed().required("Poster_image is required"),
+  featured_image: yup.mixed().required("Backdrop_image is required"),
+  original_language: yup.string().required(),
+  imdb_rating: yup.number().min(1).max(10).required(),
+  release_date: yup
+    .string()
+    .required("Please enter the year when movie was released"),
+  runtime: yup
+    .number()
+    .min(30, "Runtime can't be less than 30 minutes")
+    .max(180, "Runtime can't be more than 180 minutes")
+    .required(),
+  type: yup
+    .string()
+    .required(
+      "Field required enter 'Movie' or 'Series' with first leter captalized "
+    ),
+  film_studio: yup.string().required("Enter movie production studio"),
+  // directors: yup.array().required(),
+  // actors: yup.array().required(),
+  // genres: yup.array().required(),
+  description: yup.string().required("Short movie description is required"),
+  movie_link: yup
+    .string()
+    .required("Enter movie trailer link from youtube embedded"),
+});
 
 const selectImages = (e) => {
   let selectedFile = e.target.files[0];
@@ -81,81 +116,94 @@ const upload = async () => {
 <template>
   <section>
     <h1 class="m-2 dark:text-white text-2xl font-semibold mb-3">Add Movie</h1>
-    <form method="post " class="p-2">
+    <Form @submit="upload" method="post " class="p-2" :validation-schema="schema" v-slot="{errors}">
 
       <div class="grid gap-6 mb-6 md:grid-cols-2 ">
         <div>
           <label for="movie_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Movie name</label>
-          <input v-model="movie_title" type="text" id="movie_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Movie title" required>
+          <Field name="movie_title" v-model="movie_title" type="text" id="movie_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Movie title" required />
+          <p class="text-sm text-red-500">{{errors.movie_title}}</p>
         </div>
         <div>
           <label for="budget" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Budget</label>
-          <input v-model="budget" type="text" id="budget" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Budget in $" required>
+          <Field v-model="budget" name="budget" type="text" id="budget" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Budget in $" required />
+          <p class="text-red-500 text-sm">{{errors.budget}}</p>
         </div>
         <div>
           <label for="language" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Original movie language</label>
-          <input v-model="original_language" type="text" id="language" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Example EN" required>
+          <Field v-model="original_language" name="original_language" type="text" id="language" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Example EN" required />
+          <p class="text-red-500 text-sm">{{errors.original_language}}</p>
         </div>
         <div>
           <label for="rating" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">IMDB rating</label>
-          <input v-model="imdb_rating" type="text" id="rating" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Example 7.8" required>
+          <Field v-model="imdb_rating" name="imdb_rating" type="text" id="rating" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Example 7.8" required />
+          <p class="text-red-500 text-sm">{{errors.imdb_rating}}</p>
         </div>
         <div>
           <label for="release_date" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Release date</label>
-          <input v-model="release_date" type="text" id="release_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="2022" required>
+          <Field v-model="release_date" name="release_date" type="text" id="release_date" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="2022" required />
+          <p class="text-red-500 text-sm">{{errors.release_date}}</p>
         </div>
         <div>
           <label for="runtime" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Runtime</label>
-          <input v-model="runtime" type="number" id="runtime" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required>
+          <Field v-model="runtime" name="runtime" type="number" id="runtime" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="" required />
+          <p class="text-red-500 text-sm">{{errors.runtime}}</p>
         </div>
         <div class="mb-6">
           <label for="type" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Type</label>
-          <input v-model="type" type="text" id="type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Movie or Series" required>
+          <Field v-model="type" name="type" type="text" id="type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Movie or Series" required />
+          <p class="text-red-500 text-sm">{{errors.type}}</p>
         </div>
         <div class="mb-6">
           <label for="movie_studio" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Film Studio</label>
-          <input v-model="film_studio" type="text" id="movie_studio" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="SONY" required>
+          <Field v-model="film_studio" name="film_studio" type="text" id="movie_studio" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="SONY" required />
+          <p class="text-red-500 text-sm">{{errors.film_studio}}</p>
         </div>
         <div class="mb-6">
 
           <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="image">Movie poster</label>
-          <input @change="selectImages" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="image" type="file" name="image">
+          <Field @change="selectImages" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="image" type="file" name="image" />
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or WEBP Image Formats.</p>
-
+          <p class="text-red-500 text-sm">{{errors.image}}</p>
         </div>
         <div class="mb-6">
 
           <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white" for="featured_image">Movie featured</label>
-          <input @change="selectFeatured" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="featured_image" type="file" name="featured_image">
+          <Field @change="selectFeatured" class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" aria-describedby="file_input_help" id="featured_image" type="file" name="featured_image" />
           <p class="mt-1 text-sm text-gray-500 dark:text-gray-300" id="file_input_help">SVG, PNG, JPG or WEBP Image Formats.</p>
-
+          <p class="text-red-500 text-sm">{{errors.featured_image}}</p>
         </div>
 
         <div class="mb-6">
           <label for="directors" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Directors</label>
-          <input v-model="directors" type="text" id="directors" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Director Name" required>
+          <Field v-model="directors" name="directors" type="text" id="directors" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Director Name" required />
+          <p class="text-red-500 text-sm">{{errors.directors}}</p>
         </div>
         <div class="mb-6">
           <label for="actors" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Actors</label>
-          <input v-model="actors" type="text" id="actors" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Actor Name" required>
+          <Field v-model="actors" name="actors" type="text" id="actors" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Actor Name" required />
+          <p class="text-red-500 text-sm">{{errors.actors}}</p>
         </div>
         <div class="mb-6">
           <label for="genres" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Genres</label>
-          <input v-model="genres" type="text" id="genres" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Action" required>
+          <Field v-model="genres" name="genres" type="text" id="genres" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Action" required />
+          <p class="text-red-500 text-sm">{{errors.genres}}</p>
         </div>
         <div class="mb-6">
           <label for="description" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Movie description</label>
-          <textarea v-model="description" id="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Short movie description here..."></textarea>
+          <Field as="textarea" id="description" name="description" v-model="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Short movie description here..." />
+          <p class="text-red-500 text-sm">{{errors.description}}</p>
         </div>
         <div class="mb-6">
           <label for="movie_link" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Movie link</label>
-          <input v-model="movie_link" type="text" id="movie_link" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="https://example.com" required>
+          <Field v-model="movie_link" name="movie_link" type="text" id="movie_link" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="https://example.com" required />
+          <p class="text-red-500 text-sm">{{errors.movie_link}}</p>
         </div>
 
       </div>
 
-      <button @click.prevent="upload()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Movie</button>
-    </form>
+      <button type="submit" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Add Movie</button>
+    </Form>
 
   </section>
 </template>
