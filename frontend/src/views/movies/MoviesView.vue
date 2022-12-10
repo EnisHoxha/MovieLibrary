@@ -16,6 +16,31 @@ const all_movie_length = ref(0);
 const pageLimit = ref();
 pageLimit.value = pagination_store.getPage;
 const error = ref();
+const sort_word = ref("latest");
+
+function sorting() {
+  if (sort_word.value === "latest") {
+    return movies.value.sort(function (a, b) {
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  } else if (sort_word.value === "release_date") {
+    return movies.value.sort((p1, p2) =>
+      p1.release_date < p2.release_date
+        ? 1
+        : p1.release_date > p2.release_date
+        ? -1
+        : 0
+    );
+  } else if (sort_word.value === "imdb_rating") {
+    return movies.value.sort((p1, p2) =>
+      p1.imdb_rating < p2.imdb_rating
+        ? 1
+        : p1.imdb_rating > p2.imdb_rating
+        ? -1
+        : 0
+    );
+  }
+}
 
 const getMovies = async () => {
   await axios
@@ -24,6 +49,7 @@ const getMovies = async () => {
     })
     .then((res) => {
       movies.value = res.data.movies;
+      sorting();
       // limit.value = movies.value.length;
       pagination_store.changePage(movies.value.length);
     })
@@ -54,6 +80,7 @@ const loadMore = async () => {
     })
     .then((res) => {
       movies.value = res.data.movies;
+      sorting();
       pageLimit.value = pagination_store.getPage;
       element.classList.toggle("hidden");
     })
@@ -77,12 +104,12 @@ onMounted(() => {
       </h1>
 
       <div class="flex items-center  ">
-        <label for="countries" class="block mr-1  text-sm font-medium text-gray-900 dark:text-white">Filter:</label>
-        <select id="countries" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:p-2 p-1   dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-          <option selected>Select filtering</option>
-          <option value="US">Newest</option>
-          <option value="CA">Imdb_rating</option>
-          <option value="FR"> New in release_date</option>
+        <label for="filters" class="block mr-1  text-sm font-medium text-gray-900 dark:text-white">Filter:</label>
+        <select @change="sorting()" v-model="sort_word" id="filters" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 sm:p-2 p-1   dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+          <option disabled>Select filtering</option>
+          <option value="release_date">Newest</option>
+          <option value="imdb_rating">Imdb rating</option>
+          <option value="latest">Recently added</option>
         </select>
       </div>
     </div>
