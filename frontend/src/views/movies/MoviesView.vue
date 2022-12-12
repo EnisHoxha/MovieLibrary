@@ -97,7 +97,7 @@ onMounted(() => {
 
 <template>
   <Header />
-  <section class="px-6 mx-5 t-8">
+  <section class="px-6 mx-5 pt-8">
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between  mt-5 ">
       <h1 class="uppercase  text-yellow-500 text-lg font-semibold">
         Popular Movies
