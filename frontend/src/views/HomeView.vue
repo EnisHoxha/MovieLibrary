@@ -44,7 +44,6 @@ onMounted(() => {
   <Header />
   <HomeSlider />
   <section class="md:p-12 p-6">
-  <h1 class="text-white text-2xl">testing...</h1>
     <h1 class="md:text-6xl text-2xl sm:text-4xl dark:text-white  my-2   pl-2  border-l-4 border-yellow-500 font-bold ">Theater in your Home... <span><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="sm:w-16 sm:h-16 h-8 w-8 inline">
           <path stroke-linecap="round" stroke-linejoin="round" d="M6 20.25h12m-7.5-3v3m3-3v3m-10.125-3h17.25c.621 0 1.125-.504 1.125-1.125V4.875c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125z" />
         </svg>
