@@ -8,6 +8,7 @@ import _ from "lodash";
 import { useToast } from "vue-toastification";
 import Header from "../../components/HeaderComponent.vue";
 import Footer from "../../components/FooterComponent.vue";
+import MoviePreloader from "./MoviePreloader.vue";
 import { Swiper, SwiperSlide } from "swiper/vue";
 import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from "swiper";
 import "swiper/css/navigation";
@@ -22,7 +23,7 @@ const toast = useToast();
 const movie = ref({});
 const similar_movies = ref([]);
 const movies = localStorage.getItem("movies");
-
+const show = ref(true);
 const swiperOptions = {
   modules: [Navigation, Autoplay],
   autoplayConfig: {
@@ -69,6 +70,7 @@ const getMovie = async () => {
       withCredentials: true,
     })
     .then((res) => {
+      show.value = false;
       movie.value = res.data.movie;
     })
     .catch((error) => {
@@ -124,7 +126,7 @@ onMounted(() => {
 
 <template>
   <Header />
-  <section>
+  <section v-if="!show">
 
     <div>
       <div class=" container gap-4 mx-auto flex flex-col sm:flex-row mt-6 md:mt-20 border-b p-8   border-gray-600  md:mb-2  ">
@@ -268,8 +270,10 @@ onMounted(() => {
       </div>
       <!-- End of play trailer section -->
     </div>
+    <Footer />
   </section>
-  <Footer />
+
+  <MoviePreloader v-if="show" />
 </template>
 
 <style scoped>
