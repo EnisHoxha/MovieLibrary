@@ -1,13 +1,13 @@
 name: Build Containers for Production & Push to Dockerhub
 
 on:
-  workflow_dispatch: 
-#   push:
-#     branches:
-#       - master
+  #workflow_dispatch: 
+  push:
+    branches:
+      - master
 
 jobs:
-  Deploy_Images:
+  Deploy_Images_DockerHub:
     runs-on: ubuntu-latest
     steps:
       -
@@ -39,5 +39,38 @@ jobs:
           context: ./frontend/
           push: true
           tags: filmclubwts2020/frontend
+  
+  Deploy_Kubernetes:
+    runs-on: ubuntu-latest
+    needs: Deploy_Images_DockerHub
+    steps:
+      - name : Checkout
+        uses: actions/checkout
+      
+      - name: Install doctl 
+        uses: digitalocean/action-doctl@v2
+        with: 
+          token:${{secrets.DIGITALOCEAN_ACCESS_TOKEN}}
+      
+      - name: Apply secrets 
+        run: kubectl apply -f $GITHUB_WORKSPACE/k8s/service.yaml
+
+      - name: Save DigitalOcean kubeconfig with short-lived credentials
+        run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 movielibrary-kubernetes-cluster
+      
+      - name: Deploy to DigitalOcean Kubernetes cluster
+        run: kubectl apply -f $GITHUB_WORKSPACE/k8s/deployment.yaml
+      
+      - name: Verify Deployment of backend 
+        run: kubectl rollout status deployment/backend-deployment
+      
+       
+      - name: Verify Deployment of frontend 
+        run: kubectl rollout status deployment/frontend-deployment
+
+
+
+       
+    
           
      
