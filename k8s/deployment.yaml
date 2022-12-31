@@ -45,9 +45,8 @@ spec:
           name: static_files
       volumes:
         - name: static_files
-          emptyDir: {}
       restartPolicy: Always
-      imagePullPolicy: Always
+      
 
 --- 
 
@@ -98,6 +97,5 @@ spec:
           name: data
       volumes:
         - name: data
-          emptyDir: {}
       restartPolicy: Always
-      imagePullPolicy: Always
+      
