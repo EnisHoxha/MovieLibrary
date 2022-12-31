@@ -53,7 +53,7 @@ jobs:
           token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
       
       - name: Apply secrets 
-        run: kubectl --kubeconfig=/k8s/kubeconfig.yaml apply -f /k8s/secrets.yaml
+        run: kubectl --kubeconfig=./k8s/kubeconfig.yaml apply -f ./k8s/secrets.yaml
 
       - name: Save DigitalOcean kubeconfig with short-lived credentials
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 movielibrary-kubernetes-cluster
