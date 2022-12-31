@@ -59,14 +59,14 @@ jobs:
         run: doctl kubernetes cluster kubeconfig save --expiry-seconds 600 movielibrary-kubernetes-cluster
       
       - name: Deploy to DigitalOcean Kubernetes cluster
-        run: kubectl --kubeconfig=/k8s/kubeconfig.yaml apply -f /k8s/deployment.yaml
+        run: kubectl --kubeconfig=./k8s/kubeconfig.yaml apply -f ./k8s/deployment.yaml
       
       - name: Verify Deployment of backend 
-        run: kubectl --kubeconfig=/k8s/kubeconfig.yaml rollout status deployment/backend-deployment
+        run: kubectl --kubeconfig=./k8s/kubeconfig.yaml rollout status deployment/backend-deployment
       
        
       - name: Verify Deployment of frontend 
-        run: kubectl --kubeconfig=/k8s/kubeconfig.yaml rollout status deployment/frontend-deployment
+        run: kubectl --kubeconfig=./k8s/kubeconfig.yaml rollout status deployment/frontend-deployment
 
 
 
