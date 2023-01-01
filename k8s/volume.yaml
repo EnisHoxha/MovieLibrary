@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: static-files-claim
 spec:
-  storageClassName: standard
+  storageClassName: hostpath
   accessModes:
     - ReadWriteMany
   resources:
@@ -17,10 +17,11 @@ kind: PersistentVolume
 metadata:
   name:  static-files
   labels:
-    name: static-files
+    type: local
 spec:
   capacity: 
     storage: 5Gi
-  storageClassName: standard
+  storageClassName: hostpath 
   accessModes:
     - ReadWriteMany
+  hostPath: "/usr/src/app/public/images"
