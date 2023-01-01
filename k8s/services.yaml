@@ -32,13 +32,9 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: frontend-ingress
-  labels:
-    app: frontend
-  annotations:
-    kubernetes.io/ingress.global-static-ip-name: frontend-ip
 spec:
-  backend:
-    service: 
+  defaultBackend:
+    service:
       name: frontend-service
-      port: 5173
-
+      port:
+        number: 5173
