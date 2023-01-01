@@ -12,16 +12,3 @@ spec:
 
 ---
 
-apiVersion: v1 
-kind: PersistentVolume
-metadata:
-  name:  static-files
-  labels:
-    type: local
-spec:
-  capacity: 
-    storage: 5Gi
-  storageClassName: hostpath 
-  accessModes:
-    - ReadWriteMany
-  hostPath: "/usr/src/app/public/images"
