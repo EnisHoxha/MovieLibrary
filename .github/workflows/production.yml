@@ -58,6 +58,9 @@ jobs:
       - name: Apply secrets 
         run: kubectl  create -f ./k8s/secrets.yaml
       
+      - name: Create PersistentVolumeClaim
+        run: kubectl apply -f ./k8s/volume.yaml
+      
       - name: Deploy to DigitalOcean Kubernetes cluster
         run: kubectl  apply -f ./k8s/deployment.yaml
       
