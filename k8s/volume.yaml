@@ -3,7 +3,7 @@ kind: PersistentVolumeClaim
 metadata:
   name: static-files-claim
 spec:
-  storageClassName: manual
+  storageClassName: standard
   accessModes:
     - ReadWriteMany
   resources:
