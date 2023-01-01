@@ -1,57 +1,32 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: backend-deployment
+  name: frontend-deployment
   labels:
-    name: backend
+    app: frontend
 spec:
-  replicas: 5
-  selector:
-    matchLabels:
-      app: backend
+  replicas: 3
   strategy:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
     type: RollingUpdate
+  selector:
+    matchLabels:
+      app: frontend
   template:
     metadata:
       labels:
-        name: backend
-      app: backend
+        app: frontend
     spec:
       containers:
-      - image: filmclubwts2020/backend
-        name: backend
-        resources:
-          requests:
-            cpu: "20m"
-            memory: "55M"
-        livenessProbe:
-          httpGet:
-            path: /_status/healthz
-            port: 5002
-          initialDelaySeconds: 90
-          timeoutSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /_status/healthz
-            port: 5002
-          initialDelaySeconds: 30
-          timeoutSeconds: 10
+      - name: frontend
+        image: filmclubwts2020/frontend
+        ports:
+        - containerPort: 5173
         envFrom:
         - secretRef:  
-            name: backend-secret     
-        ports:
-        - containerPort: 5002
-          name:  backend
-        volumeMounts:
-        - mountPath: "/usr/src/app/public/images"
-          name: static-files
-      volumes:
-        - name: static-files
-          persistentVolumeClaim:
-              claimName: static-files
+            name: frontend-secret 
       restartPolicy: Always
       
 
@@ -60,53 +35,38 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  frontend-deployment
+  name: backend-deployment
   labels:
-    name:  frontend
+    app: backend
 spec:
-  replicas: 5
-  matchLabels:
-    app: frontend
+  replicas: 3
   strategy:
     rollingUpdate:
       maxSurge: 1
       maxUnavailable: 1
     type: RollingUpdate
+  selector:
+    matchLabels:
+      app: backend
   template:
     metadata:
       labels:
-        name:  frontend
-      app: frontend
+        app: backend
     spec:
       containers:
-      - image:  filmclubwts2020/frontend
-        name:  frontend
-        resources:
-          requests:
-            cpu: "20m"
-            memory: "55M"
-        livenessProbe:
-          httpGet:
-            path: /_status/healthz
-            port: 5173
-          initialDelaySeconds: 90
-          timeoutSeconds: 10
-        readinessProbe:
-          httpGet:
-            path: /_status/healthz
-            port: 5173
-          initialDelaySeconds: 30
-          timeoutSeconds: 10
+      - name: backend
+        image: filmclubwts2020/backend
+        ports:
+        - containerPort: 5002
         envFrom:
         - secretRef:  
-            name: frontend-secret      
-        ports:
-        - containerPort:  5173
-          name:  frontend
+            name: backend-secret 
         volumeMounts:
-        - mountPath: "/data"
-          name: data
+        - mountPath: "/usr/src/app/public/images"
+          name: static-files
       volumes:
-        - name: data
+        - name: static-files
+          persistentVolumeClaim:
+              claimName: static-files
       restartPolicy: Always
       
