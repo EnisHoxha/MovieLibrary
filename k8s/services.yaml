@@ -1,12 +1,29 @@
 kind: Service
 apiVersion: v1
 metadata:
-  name:  Service Name
+  name:  backend-service
 spec:
   selector:
-    app:  Selector Label
-  type:  LoadBalancer | ClusterIP | NodePort
+    app:  backend
+  type:  ClusterIP
   ports:
-  - name:  name-of-the-port
+  - name:  backend-port
+    port:  5002
+    targetPort:  5002
+
+    
+
+---
+
+kind: Service
+apiVersion: v1
+metadata:
+  name:  frontend-service
+spec:
+  selector:
+    app:  frontend
+  type:  NodePort
+  ports:
+  - name:  frontend-port
     port:  80
-    targetPort:  8080
+    targetPort:  5173

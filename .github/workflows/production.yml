@@ -61,10 +61,12 @@ jobs:
       - name: Deploy to DigitalOcean Kubernetes cluster
         run: kubectl  apply -f ./k8s/deployment.yaml
       
+      - name: Apply Services for frontend and backend
+        run: kubectl apply -f ./k8s/services.yaml
+      
       - name: Verify Deployment of backend 
         run: kubectl  rollout status deployment/backend-deployment
       
-       
       - name: Verify Deployment of frontend 
         run: kubectl  rollout status deployment/frontend-deployment
 

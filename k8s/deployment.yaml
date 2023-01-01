@@ -3,8 +3,9 @@ kind: Deployment
 metadata:
   name:  backend-deployment
   labels:
-    name:  backend-deployment
+    name:  backend
 spec:
+  replicas: 5
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -13,11 +14,11 @@ spec:
   template:
     metadata:
       labels:
-        name:  backend-deployment
+        name:  backend
     spec:
       containers:
       - image:  filmclubwts2020/backend
-        name:  backend-deployment
+        name:  backend
         resources:
           requests:
             cpu: "20m"
@@ -38,13 +39,15 @@ spec:
         - secretRef:  
             name: backend-secret     
         ports:
-        - containerPort:  5002
-          name:  backend-deployment
+        - containerPort: 5002
+          name:  backend
         volumeMounts:
-        - mountPath: /usr/src/app/public/images
+        - mountPath: "/usr/src/app/public/images"
           name: static_files
       volumes:
         - name: static_files
+          persistentVolumeClaim:
+              claimName: static_files
       restartPolicy: Always
       
 
@@ -55,8 +58,9 @@ kind: Deployment
 metadata:
   name:  frontend-deployment
   labels:
-    name:  frontend-deployment
+    name:  frontend
 spec:
+  replicas: 5
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -65,11 +69,11 @@ spec:
   template:
     metadata:
       labels:
-        name:  frontend-deployment
+        name:  frontend
     spec:
       containers:
       - image:  filmclubwts2020/frontend
-        name:  frontend-deployment
+        name:  frontend
         resources:
           requests:
             cpu: "20m"
@@ -91,9 +95,9 @@ spec:
             name: frontend-secret      
         ports:
         - containerPort:  5173
-          name:  frontend-deployment
+          name:  frontend
         volumeMounts:
-        - mountPath: /data
+        - mountPath: "/data"
           name: data
       volumes:
         - name: data
