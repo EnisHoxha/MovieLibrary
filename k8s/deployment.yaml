@@ -1,11 +1,14 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name:  backend-deployment
+  name: backend-deployment
   labels:
-    name:  backend
+    name: backend
 spec:
   replicas: 5
+  selector:
+    matchLabels:
+      app: backend
   strategy:
     rollingUpdate:
       maxSurge: 1
@@ -14,11 +17,11 @@ spec:
   template:
     metadata:
       labels:
-        name:  backend
+        name: backend
     spec:
       containers:
-      - image:  filmclubwts2020/backend
-        name:  backend
+      - image: filmclubwts2020/backend
+        name: backend
         resources:
           requests:
             cpu: "20m"
@@ -43,11 +46,11 @@ spec:
           name:  backend
         volumeMounts:
         - mountPath: "/usr/src/app/public/images"
-          name: static_files
+          name: static-files
       volumes:
         - name: static_files
           persistentVolumeClaim:
-              claimName: static_files
+              claimName: static-files
       restartPolicy: Always
       
 
@@ -61,6 +64,8 @@ metadata:
     name:  frontend
 spec:
   replicas: 5
+  matchLabels:
+    app: frontend
   strategy:
     rollingUpdate:
       maxSurge: 1
