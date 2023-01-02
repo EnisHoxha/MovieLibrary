@@ -53,6 +53,10 @@ spec:
       labels:
         app: backend
     spec:
+      volumes:
+      - name: static-files
+        persistentVolumeClaim:
+          claimName: static-files-claim
       containers:
       - name: backend
         image: filmclubwts2020/backend
@@ -65,8 +69,5 @@ spec:
         volumeMounts:
         - mountPath: /usr/src/app/public/images
           name: static-files
-      volumes:
-      - name: static-files
-        persistentVolumeClaim:
-          claimName: static-files-claim
+      
       
