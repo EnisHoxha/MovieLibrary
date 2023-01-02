@@ -22,12 +22,12 @@ spec:
       containers:
       - name: frontend
         image: filmclubwts2020/frontend
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5173
         envFrom:
         - secretRef:  
             name: frontend-secret 
-      restartPolicy: Always
       
 
 --- 
@@ -53,20 +53,20 @@ spec:
       labels:
         app: backend
     spec:
-      volumes:
-      - name: static-files
-        persistentVolumeClaim:
-          claimName: static-files-claim
       containers:
       - name: backend
         image: filmclubwts2020/backend
+        imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 5002
         envFrom:
         - secretRef:  
             name: backend-secret 
         volumeMounts:
-        - mountPath: "/usr/src/app/public/images"
+        - mountPath: /usr/src/app/public/images
           name: static-files
-      restartPolicy: Always
+      volumes:
+      - name: static-files
+        persistentVolumeClaim:
+          claimName: static-files-claim
       

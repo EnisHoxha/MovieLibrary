@@ -3,12 +3,11 @@ kind: PersistentVolumeClaim
 metadata:
   name: static-files-claim
 spec:
-  storageClassName: hostpath
+  storageClassName: longhorn
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   resources:
     requests:
-      storage: 5Gi
+      storage: 1Gi
 
 ---
-
