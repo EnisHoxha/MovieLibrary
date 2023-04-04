@@ -1,0 +1,97 @@
+@import './base.css';
+
+.dark body {
+  background-color: rgb(17 24 39);
+}
+
+.dark body::-webkit-scrollbar {
+  width: 0.7em;
+}
+ 
+.dark body::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 6px rgb(39 39 42);
+  background-color: rgb(39 39 42);
+  
+}
+ 
+.dark body::-webkit-scrollbar-thumb {
+  background-color: rgb(115 115 115);
+  outline: 1px solid rgb(107 114 128);
+  border-radius: 5px;
+  
+}
+
+/* swiper slider customize */
+:root {
+  --swiper-theme-color: #eab308 ;
+  --swiper-navigation-size: 12px;
+}
+
+.swiper-pagination-bullet {
+  width: var(--swiper-pagination-bullet-width,var(--swiper-pagination-bullet-size,12px))!important;
+  height: var(--swiper-pagination-bullet-height,var(--swiper-pagination-bullet-size,12px))!important;
+  background: var(--swiper-pagination-bullet-inactive-color,#ff000000)!important;
+  opacity: var(--swiper-pagination-bullet-inactive-opacity, 1)!important;
+  border:2px solid #b8b8b8;
+}
+
+.swiper-pagination-bullet-active{
+  background: var(--swiper-pagination-bullet-active-color,#b8b8b8)!important;
+
+}
+
+@media only screen and (max-width: 640px) {
+  .swiper-horizontal>.swiper-pagination-bullets, .swiper-pagination-bullets.swiper-pagination-horizontal, .swiper-pagination-custom, .swiper-pagination-fraction {
+    
+    display: none!important;
+}
+}
+
+.swiper-button-next,
+.swiper-button-prev {
+  background-color: #1c1c1c;
+  box-shadow: 0 0 9px #adadad;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  padding: 10px;
+  font-weight: bolder;
+  top: 30%;
+  opacity: 0.8;
+  
+}
+
+/* 
+#app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+
+  font-weight: normal;
+}
+
+a,
+.green {
+  text-decoration: none;
+  color: hsla(160, 100%, 37%, 1);
+  transition: 0.4s;
+}
+
+@media (hover: hover) {
+  a:hover {
+    background-color: hsla(160, 100%, 37%, 0.2);
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+    display: flex;
+    place-items: center;
+  }
+
+  #app {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding: 0 2rem;
+  }
+} */

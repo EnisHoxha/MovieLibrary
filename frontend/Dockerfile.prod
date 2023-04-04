@@ -1,0 +1,18 @@
+#build vue project
+FROM node:19.1.0-bullseye as build
+WORKDIR /usr/src/app
+RUN chown node:node ./
+COPY package*.json ./
+RUN npm ci
+COPY --chown=node:node . .
+USER node
+RUN npm run build
+
+#create nginx server to serve vue js app
+FROM nginx:1.23.2-alpine as prod-stage
+COPY --from=build /usr/src/app/dist /usr/share/nginx/html 
+RUN rm /etc/nginx/conf.d/*
+COPY default.conf /etc/nginx/conf.d/
+EXPOSE 80 
+EXPOSE 443
+CMD [ "nginx","-g","daemon off;" ]
